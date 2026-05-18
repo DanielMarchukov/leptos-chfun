@@ -57,10 +57,18 @@ jobs:
       - name: Install trunk
         run: |
           set -euo pipefail
-          if ! command -v trunk >/dev/null 2>&1; then
-            cargo install --locked --version "${TRUNK_VERSION}" trunk
-          else
-            echo "trunk already cached: $(trunk --version)"
+          needs_install=true
+          if command -v trunk >/dev/null 2>&1; then
+            installed=$(trunk --version 2>/dev/null | awk '{print $2}' || true)
+            if [ "${installed}" = "${TRUNK_VERSION}" ]; then
+              echo "trunk ${installed} cached, matches pin"
+              needs_install=false
+            else
+              echo "trunk version mismatch: have '${installed}', want '${TRUNK_VERSION}' — reinstalling"
+            fi
+          fi
+          if [ "${needs_install}" = true ]; then
+            cargo install --locked --force --version "${TRUNK_VERSION}" trunk
           fi
 
       - name: Build release bundle
