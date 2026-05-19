@@ -1,0 +1,91 @@
+language: "en-US"
+early_access: false
+
+tone_instructions: >-
+  Senior staff engineer review. Be direct: cite paths and line numbers;
+  suggest concrete diffs over vague concerns. No praise or filler. If wrong,
+  say so plainly. Mark stylistic preferences. Prefer 'X breaks Y' over
+  'consider Z'.
+
+reviews:
+  profile: "assertive"
+  request_changes_workflow: true
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: true
+  changed_files_summary: true
+  sequence_diagrams: false
+  abort_on_close: true
+
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    drafts: false
+    ignore_title_keywords: ["WIP", "DO NOT MERGE", "skip-review"]
+    base_branches:
+      - "^mainline$"
+
+  path_filters:
+    - "!Cargo.lock"
+    - "!dist/**"
+    - "!target/**"
+    - "!**/*.lock"
+
+  path_instructions:
+    - path: "src/**/*.rs"
+      instructions: >-
+        Rust review. Flag any panic!/unwrap/expect that should be Result-based;
+        flag unnecessary clone/to_owned where a borrow works; verify Send/Sync
+        bounds for anything captured by closures; check for ? propagation
+        instead of match arms returning early. Leptos specifics: components
+        must be PascalCase functions, signals owned by the right scope, and
+        view! macros should not contain logic that belongs in a derived signal.
+        With pedantic + nursery already in [lints.clippy], do not duplicate
+        what clippy already catches — focus on architecture, naming, and
+        domain bugs.
+
+    - path: "Dockerfile"
+      instructions: >-
+        Verify multi-stage layout minimizes final image. Base images must be
+        pinned to specific minor versions (no :latest, no floating major).
+        No secrets in layers (no ARG used to inject tokens). HEALTHCHECK must
+        cover an endpoint that proves the app is serving, not just that the
+        port is open. Cache mounts must be sound for parallel builds
+        (sharing=locked when needed). Final image should not run as root
+        unless there is a stated reason.
+
+    - path: "nginx.conf"
+      instructions: >-
+        Verify required security headers are present and "always" qualified:
+        X-Content-Type-Options, X-Frame-Options, Referrer-Policy,
+        Permissions-Policy. Cache-Control must be immutable for hashed assets
+        and no-cache for index.html. SPA fallback must not expose dotfiles
+        or sensitive paths. gzip_types should not include already-compressed
+        formats (jpeg, png, woff2). Confirm WASM mime is application/wasm.
+
+    - path: ".github/workflows/*.yml"
+      instructions: >-
+        Actions must be pinned to a specific tag or SHA — never @main or @master.
+        Workflow permissions must be least-privilege at the workflow level
+        (contents: read by default; write only where needed). Production-deploy
+        jobs must use concurrency with cancel-in-progress: false. Secrets must
+        never be echoed, even in failure paths. Required configuration must
+        be asserted up front so failures are loud rather than silent.
+
+    - path: "Cargo.toml"
+      instructions: >-
+        New dependencies need a stated reason in the PR description. Versions
+        should pin a minor (e.g. "0.8") rather than caret-major. Adding any
+        feature must be justified — Leptos features especially are large.
+        Do not soften [lints]: removing pedantic/nursery, or adding
+        unsafe_code = "allow", needs explicit author justification.
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  learnings:
+    scope: "auto"
+  issues:
+    scope: "auto"

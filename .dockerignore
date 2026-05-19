@@ -1,0 +1,26 @@
+# Build outputs — produced inside the container, not from host
+target/
+dist/
+
+# VCS
+.git/
+.gitattributes
+.gitignore
+
+# CI / docs / editor — not needed at build time
+.github/
+README.md
+LICENSE
+*.md
+.vscode/
+.idea/
+.editorconfig
+
+# Local env
+.env
+.env.*
+!.env.example
+
+# OS junk
+.DS_Store
+Thumbs.db
