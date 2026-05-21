@@ -1,0 +1,20 @@
+# Used by Dokploy's "Docker Compose" service type (not "Stack"). Single
+# host, single container; Dokploy injects Traefik routing labels from
+# the domain settings in its UI, so none are declared here. Avoid adding
+# `container_name` — Dokploy generates one and a fixed name causes
+# collisions across redeploys.
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: leptos-chfun:latest
+    restart: unless-stopped
+    networks:
+      - dokploy-network
+    expose:
+      - "80"
+
+networks:
+  dokploy-network:
+    external: true
