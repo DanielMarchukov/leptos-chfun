@@ -1,0 +1,75 @@
+# Depot CI Migration
+# Source: .github/workflows/pr_open.yml
+#
+# Changes made:
+# - Changed GitHub runs-on labels to their Depot equivalents
+
+name: PR Open
+# Runs on every PR targeting mainline AND on every direct push to mainline.
+# Responsibility: prove the change compiles, is formatted, passes clippy,
+# and produces a valid Trunk bundle. No deployment happens here.
+on:
+  pull_request:
+    branches: [mainline]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [mainline]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+env:
+  CARGO_TERM_COLOR: always
+  # Version pins — bump intentionally.
+  TRUNK_VERSION: "0.21.14"
+  WASM_BINDGEN_VERSION: "0.2.100"
+jobs:
+  verify:
+    name: Format, lint, build
+    runs-on: depot-ubuntu-latest # was: ubuntu-latest. Mapped standard GitHub runner to Depot equivalent.
+    timeout-minutes: 20
+    # Draft PRs get skipped, but push events have no draft field so they always run.
+    if: github.event_name == 'push' || github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Install Rust toolchain (stable + wasm32)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+          components: rustfmt, clippy
+      - name: Cache cargo registry, git, and target
+        uses: Swatinem/rust-cache@v2
+        with:
+          cache-all-crates: true
+          shared-key: leptos-chfun-ci
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+      - name: Clippy (wasm32 target, warnings denied)
+        run: cargo clippy --target wasm32-unknown-unknown --all-features -- -D warnings
+      - name: Install trunk
+        run: |
+          set -euo pipefail
+          needs_install=true
+          if command -v trunk >/dev/null 2>&1; then
+            installed=$(trunk --version 2>/dev/null | awk '{print $2}' || true)
+            if [ "${installed}" = "${TRUNK_VERSION}" ]; then
+              echo "trunk ${installed} cached, matches pin"
+              needs_install=false
+            else
+              echo "trunk version mismatch: have '${installed}', want '${TRUNK_VERSION}' — reinstalling"
+            fi
+          fi
+          if [ "${needs_install}" = true ]; then
+            cargo install --locked --force --version "${TRUNK_VERSION}" trunk
+          fi
+      - name: Build release bundle
+        run: trunk build --release
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ github.event.pull_request.head.sha }}
+          path: dist/
+          retention-days: 7
+          if-no-files-found: error
