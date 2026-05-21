@@ -23,7 +23,6 @@ env:
   CARGO_TERM_COLOR: always
   # Version pins — bump intentionally.
   TRUNK_VERSION: "0.21.14"
-  WASM_BINDGEN_VERSION: "0.2.100"
 jobs:
   verify:
     name: Format, lint, build
