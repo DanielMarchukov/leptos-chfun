@@ -37,9 +37,11 @@ concurrency:
   group: release-production
   cancel-in-progress: false
 
+# Workflow-level default: read-only. The build-and-push job overrides
+# locally to add packages:write so GHCR push is scoped to one job, not
+# inherited by the deploy job which only makes HTTP API calls.
 permissions:
   contents: read
-  packages: write    # required to push to GHCR
 
 env:
   IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/leptos-chfun
@@ -49,6 +51,9 @@ jobs:
     name: Build image and push to GHCR
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write    # required to push to GHCR
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
       version: ${{ steps.meta.outputs.version }}
@@ -84,6 +89,11 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          # GIT_SHA is baked into /usr/share/nginx/html/version inside
+          # the image so the deploy job can prove the running container
+          # is THIS build, not the previous one.
+          build-args: |
+            GIT_SHA=${{ github.sha }}
           # GHA cache is per-repo, persists between runs and is free.
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -142,20 +152,26 @@ jobs:
       - name: Wait for new build to serve
         env:
           PUBLIC_BASE_URL: ${{ vars.PUBLIC_BASE_URL }}
+          EXPECTED_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          # Pull + restart is typically 30-60s for our small image.
-          # Allow ~6 minutes (36 * 10s) for swarm convergence + LE renewal hiccups.
+          # Poll /version (which the Dockerfile bakes from ARG GIT_SHA)
+          # and only succeed when the served value equals the SHA we
+          # just built. /healthz returning 200 was not enough: it would
+          # also pass while the previous container was still serving.
+          # ~6 minute cap (36 * 10s).
           for attempt in $(seq 1 36); do
-            if curl --fail --silent --show-error --max-time 10 \
-                 -o /dev/null "${PUBLIC_BASE_URL%/}/healthz"; then
-              echo "Site healthy on attempt ${attempt}"
+            actual=$(curl --silent --show-error --max-time 10 \
+                       "${PUBLIC_BASE_URL%/}/version" 2>/dev/null \
+                       | tr -d '[:space:]' || true)
+            if [ "${actual}" = "${EXPECTED_SHA}" ]; then
+              echo "Site serving expected SHA ${EXPECTED_SHA} (attempt ${attempt})"
               exit 0
             fi
-            echo "Attempt ${attempt}: not ready, retrying in 10s..."
+            echo "Attempt ${attempt}: serving '${actual:-<empty>}', want '${EXPECTED_SHA}', retrying in 10s..."
             sleep 10
           done
-          echo "Site did not become healthy in time."
+          echo "Site did not start serving expected SHA in time."
           exit 1
 
       - name: Purge Cloudflare edge cache
