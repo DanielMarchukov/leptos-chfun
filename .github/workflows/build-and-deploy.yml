@@ -61,6 +61,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          # Don't write GITHUB_TOKEN into .git/config after checkout.
+          # Nothing in this job runs git operations against the remote
+          # — Buildx, metadata-action, and build-push-action all read
+          # the workspace as files.
+          persist-credentials: false
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
