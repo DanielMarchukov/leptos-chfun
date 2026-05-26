@@ -21,7 +21,7 @@ name: Build and Deploy
 # Required configuration:
 #   secrets.DOKPLOY_API_KEY        from Dokploy -> Profile -> API
 #   secrets.CLOUDFLARE_API_TOKEN   scoped Zone.Cache Purge on chpilates.fun
-#   vars.DOKPLOY_URL               e.g. https://dokploy.chpilates.fun
+#   vars.DOKPLOY_URL               Base URL of the Dokploy panel
 #   vars.DOKPLOY_APPLICATION_ID    UUID of the Dokploy application
 #   vars.PUBLIC_BASE_URL           https://chpilates.fun
 #   vars.CLOUDFLARE_ZONE_ID        Zone ID of chpilates.fun
