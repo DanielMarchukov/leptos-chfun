@@ -1,0 +1,194 @@
+name: Build and Deploy
+
+# =====================================================================
+# Tag-triggered release pipeline. Replaces release.yml.
+#
+# Flow on `git push --tags`:
+#   1. Build the Docker image on Actions hardware (16 GB RAM, fast),
+#      using BuildKit + GitHub Actions cache so warm rebuilds are quick.
+#   2. Push to GHCR with three tags: vX.Y.Z (from the git tag),
+#      latest, and sha-<short> for unambiguous rollbacks.
+#   3. POST Dokploy /api/application.deploy so Dokploy pulls the
+#      freshly pushed image and restarts the container.
+#   4. Poll PUBLIC_BASE_URL/healthz until 200.
+#   5. Purge Cloudflare edge cache.
+#
+# The Dokploy app MUST be configured with Source = Docker Image
+# pointing at ghcr.io/<owner>/leptos-chfun:latest. The Dokploy
+# tag-webhook trigger MUST be disabled (otherwise it races with this
+# workflow's explicit API deploy call).
+#
+# Required configuration:
+#   secrets.DOKPLOY_API_KEY        from Dokploy -> Profile -> API
+#   secrets.CLOUDFLARE_API_TOKEN   scoped Zone.Cache Purge on chpilates.fun
+#   vars.DOKPLOY_URL               Base URL of the Dokploy panel
+#   vars.DOKPLOY_APPLICATION_ID    UUID of the Dokploy application
+#   vars.PUBLIC_BASE_URL           https://chpilates.fun
+#   vars.CLOUDFLARE_ZONE_ID        Zone ID of chpilates.fun
+#   vars.DEPLOY_ENABLED            "true" to arm the deploy job
+# =====================================================================
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+concurrency:
+  group: release-production
+  cancel-in-progress: false
+
+# Workflow-level default: read-only. The build-and-push job overrides
+# locally to add packages:write so GHCR push is scoped to one job, not
+# inherited by the deploy job which only makes HTTP API calls.
+permissions:
+  contents: read
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/leptos-chfun
+
+jobs:
+  build-and-push:
+    name: Build image and push to GHCR
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write    # required to push to GHCR
+    outputs:
+      tags: ${{ steps.meta.outputs.tags }}
+      version: ${{ steps.meta.outputs.version }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          # Don't write GITHUB_TOKEN into .git/config after checkout.
+          # Nothing in this job runs git operations against the remote
+          # — Buildx, metadata-action, and build-push-action all read
+          # the workspace as files.
+          persist-credentials: false
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute image tags and labels
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=tag
+            type=raw,value=latest,enable=true
+            type=sha,prefix=sha-,format=short
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # GIT_SHA is baked into /usr/share/nginx/html/version inside
+          # the image so the deploy job can prove the running container
+          # is THIS build, not the previous one.
+          build-args: |
+            GIT_SHA=${{ github.sha }}
+          # GHA cache is per-repo, persists between runs and is free.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          # Multi-platform skipped — VPS is single arch (CAX11 ARM /
+          # CPX11 x86 depending on host). Bump to `platforms: linux/amd64,linux/arm64`
+          # when needed; cold builds get slower.
+
+  deploy:
+    name: Trigger Dokploy deploy, verify, purge cache
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    if: ${{ vars.DEPLOY_ENABLED == 'true' }}
+
+    steps:
+      - name: Assert required configuration
+        env:
+          DOKPLOY_URL: ${{ vars.DOKPLOY_URL }}
+          DOKPLOY_APPLICATION_ID: ${{ vars.DOKPLOY_APPLICATION_ID }}
+          DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY }}
+          PUBLIC_BASE_URL: ${{ vars.PUBLIC_BASE_URL }}
+          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          missing=()
+          [ -n "${DOKPLOY_URL:-}" ]            || missing+=("vars.DOKPLOY_URL")
+          [ -n "${DOKPLOY_APPLICATION_ID:-}" ] || missing+=("vars.DOKPLOY_APPLICATION_ID")
+          [ -n "${DOKPLOY_API_KEY:-}" ]        || missing+=("secrets.DOKPLOY_API_KEY")
+          [ -n "${PUBLIC_BASE_URL:-}" ]        || missing+=("vars.PUBLIC_BASE_URL")
+          [ -n "${CLOUDFLARE_ZONE_ID:-}" ]     || missing+=("vars.CLOUDFLARE_ZONE_ID")
+          [ -n "${CLOUDFLARE_API_TOKEN:-}" ]   || missing+=("secrets.CLOUDFLARE_API_TOKEN")
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "Missing required configuration:"
+            printf '  - %s\n' "${missing[@]}"
+            exit 1
+          fi
+
+      - name: Trigger Dokploy deploy
+        env:
+          DOKPLOY_URL: ${{ vars.DOKPLOY_URL }}
+          DOKPLOY_APPLICATION_ID: ${{ vars.DOKPLOY_APPLICATION_ID }}
+          DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY }}
+        run: |
+          set -euo pipefail
+          # Dokploy pulls the freshly pushed image (ghcr.io/.../:latest)
+          # and restarts the container. No build happens on the VPS.
+          curl --fail-with-body --silent --show-error \
+            -X POST \
+            -H "x-api-key: ${DOKPLOY_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d "{\"applicationId\":\"${DOKPLOY_APPLICATION_ID}\"}" \
+            "${DOKPLOY_URL%/}/api/application.deploy"
+
+      - name: Wait for new build to serve
+        env:
+          PUBLIC_BASE_URL: ${{ vars.PUBLIC_BASE_URL }}
+          EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          # Poll /version (which the Dockerfile bakes from ARG GIT_SHA)
+          # and only succeed when the served value equals the SHA we
+          # just built. /healthz returning 200 was not enough: it would
+          # also pass while the previous container was still serving.
+          # ~6 minute cap (36 * 10s).
+          for attempt in $(seq 1 36); do
+            actual=$(curl --silent --show-error --max-time 10 \
+                       "${PUBLIC_BASE_URL%/}/version" 2>/dev/null \
+                       | tr -d '[:space:]' || true)
+            if [ "${actual}" = "${EXPECTED_SHA}" ]; then
+              echo "Site serving expected SHA ${EXPECTED_SHA} (attempt ${attempt})"
+              exit 0
+            fi
+            echo "Attempt ${attempt}: serving '${actual:-<empty>}', want '${EXPECTED_SHA}', retrying in 10s..."
+            sleep 10
+          done
+          echo "Site did not start serving expected SHA in time."
+          exit 1
+
+      - name: Purge Cloudflare edge cache
+        env:
+          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error \
+            -X POST \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data '{"purge_everything":true}' \
+            "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache"

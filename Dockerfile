@@ -50,6 +50,14 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
+# Build marker. Written into the served directory so the release
+# workflow can poll /version and assert the running image really is the
+# one CI just shipped (not the previous container that swarm hasn't
+# rolled forward yet). Defaults to "unknown" so local `docker build`
+# without --build-arg still produces a usable image.
+ARG GIT_SHA=unknown
+RUN echo "${GIT_SHA}" > /usr/share/nginx/html/version
+
 # wget is in the alpine base; --spider hits the URL without downloading.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD wget --quiet --tries=1 --spider http://localhost/healthz || exit 1
