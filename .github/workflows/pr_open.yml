@@ -66,3 +66,14 @@ jobs:
 
       - name: Build (cargo-leptos, release)
         run: cargo leptos build --release
+
+      # cargo-leptos emits the client bundle to target/site (the analog of the
+      # old Trunk dist/). The full SSR deployable is the Docker image built on
+      # tag in build-and-deploy.yml; this artifact is a build-output check.
+      - name: Upload site build
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-${{ github.sha }}
+          path: target/site
+          retention-days: 7
+          if-no-files-found: error
