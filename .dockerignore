@@ -16,10 +16,17 @@ LICENSE
 .idea/
 .editorconfig
 
-# Local env
+# Local env / secrets — must never land in the image's site_root
 .env
 .env.*
 !.env.example
+
+# Local planning/scaffolding — not needed at build time, may contain
+# unreviewed notes; excluded so it can never be copied into the image.
+plan.md
+docs/
+.superpowers/
+.claude/
 
 # OS junk
 .DS_Store
