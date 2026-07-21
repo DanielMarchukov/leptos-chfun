@@ -1,12 +1,12 @@
 #[cfg(feature = "ssr")]
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     use axum::Router;
     use leptos::prelude::*;
     use leptos_axum::{generate_route_list, LeptosRoutes};
     use leptos_chfun::app::{shell, App};
 
-    let conf = get_configuration(None).unwrap();
+    let conf = get_configuration(None)?;
     let leptos_options = conf.leptos_options;
     let addr = leptos_options.site_addr;
     let routes = generate_route_list(App);
@@ -21,10 +21,10 @@ async fn main() {
         .with_state(leptos_options);
     let app = leptos_chfun::server::http::apply_middleware(app);
 
-    let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
-    axum::serve(listener, app.into_make_service())
-        .await
-        .unwrap();
+    let listener = tokio::net::TcpListener::bind(&addr).await?;
+    axum::serve(listener, app.into_make_service()).await?;
+
+    Ok(())
 }
 
 #[cfg(not(feature = "ssr"))]

@@ -1038,6 +1038,7 @@ dependencies = [
  "leptos_axum",
  "leptos_meta",
  "leptos_router",
+ "percent-encoding",
  "tokio",
  "tower",
  "tower-http",
