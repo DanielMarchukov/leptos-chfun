@@ -68,11 +68,13 @@ COPY --from=builder /out/site   /app/site
 ENV LEPTOS_OUTPUT_NAME=leptos-chfun \
     LEPTOS_SITE_ROOT=site \
     LEPTOS_SITE_PKG_DIR=pkg \
-    LEPTOS_SITE_ADDR=0.0.0.0:3000
+    LEPTOS_SITE_ADDR=0.0.0.0:80
 
-EXPOSE 3000
+# Serve on 80 like the previous nginx image, so the existing Dokploy/Traefik
+# routing (with Cloudflare in front) stays unchanged.
+EXPOSE 80
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost:3000/healthz || exit 1
+    CMD wget --quiet --tries=1 --spider http://localhost/healthz || exit 1
 
 CMD ["/app/server"]
