@@ -1,8 +1,9 @@
 name: PR Open
 
 # Runs on every PR targeting mainline AND on every direct push to mainline.
-# Responsibility: prove the change compiles, is formatted, passes clippy,
-# and produces a valid Trunk bundle. No deployment happens here.
+# Responsibility: prove the change is formatted, passes clippy on BOTH the
+# server (ssr) and client (hydrate/wasm) sides, and produces a valid
+# cargo-leptos build. No deployment happens here.
 
 on:
   pull_request:
@@ -20,15 +21,12 @@ permissions:
 
 env:
   CARGO_TERM_COLOR: always
-  # Version pins — bump intentionally.
-  TRUNK_VERSION: "0.21.14"
-  WASM_BINDGEN_VERSION: "0.2.100"
 
 jobs:
   verify:
     name: Format, lint, build
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     # Draft PRs get skipped, but push events have no draft field so they always run.
     if: github.event_name == 'push' || github.event.pull_request.draft == false
 
@@ -51,33 +49,20 @@ jobs:
       - name: Check formatting
         run: cargo fmt --all -- --check
 
-      - name: Clippy (wasm32 target, warnings denied)
-        run: cargo clippy --target wasm32-unknown-unknown --all-features -- -D warnings
+      # Two clippy passes: the server (ssr, native) and the client
+      # (hydrate, wasm32). NEVER use `--all-features` on the wasm target — it
+      # enables `ssr`, which pulls in Tokio's `net` feature (mio), and mio does
+      # not compile for wasm ("This wasm target is unsupported by mio").
+      - name: Clippy (server / ssr, native)
+        run: cargo clippy --features ssr -- -D warnings
 
-      - name: Install trunk
-        run: |
-          set -euo pipefail
-          needs_install=true
-          if command -v trunk >/dev/null 2>&1; then
-            installed=$(trunk --version 2>/dev/null | awk '{print $2}' || true)
-            if [ "${installed}" = "${TRUNK_VERSION}" ]; then
-              echo "trunk ${installed} cached, matches pin"
-              needs_install=false
-            else
-              echo "trunk version mismatch: have '${installed}', want '${TRUNK_VERSION}' — reinstalling"
-            fi
-          fi
-          if [ "${needs_install}" = true ]; then
-            cargo install --locked --force --version "${TRUNK_VERSION}" trunk
-          fi
+      - name: Clippy (client / hydrate, wasm32)
+        run: cargo clippy --lib --target wasm32-unknown-unknown --features hydrate -- -D warnings
 
-      - name: Build release bundle
-        run: trunk build --release
-
-      - name: Upload dist artifact
-        uses: actions/upload-artifact@v4
+      - name: Install cargo-leptos
+        uses: taiki-e/install-action@v2
         with:
-          name: dist-${{ github.event.pull_request.head.sha }}
-          path: dist/
-          retention-days: 7
-          if-no-files-found: error
+          tool: cargo-leptos
+
+      - name: Build (cargo-leptos, release)
+        run: cargo leptos build --release
