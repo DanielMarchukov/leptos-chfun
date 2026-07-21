@@ -19,6 +19,7 @@ async fn main() {
         })
         .fallback(leptos_axum::file_and_error_handler(shell))
         .with_state(leptos_options);
+    let app = leptos_chfun::server::http::apply_middleware(app);
 
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
     axum::serve(listener, app.into_make_service())
