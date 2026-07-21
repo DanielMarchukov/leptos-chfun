@@ -3,16 +3,32 @@ name = "leptos-chfun"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
-leptos = { version = "0.8", features = ["csr"] }
+leptos = { version = "0.8" }
+leptos_meta = { version = "0.8" }
+leptos_router = { version = "0.8" }
+leptos_axum = { version = "0.8", optional = true }
 console_error_panic_hook = "0.1"
+axum = { version = "0.8", optional = true }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"], optional = true }
+tower = { version = "0.5", optional = true }
+tower-http = { version = "0.6", features = ["fs"], optional = true }
+wasm-bindgen = { version = "0.2", optional = true }   # pin exact if cargo-leptos requires
+
+[features]
+hydrate = ["leptos/hydrate", "dep:wasm-bindgen"]
+ssr = [
+  "dep:axum", "dep:tokio", "dep:tower", "dep:tower-http", "dep:leptos_axum",
+  "leptos/ssr", "leptos_meta/ssr", "leptos_router/ssr",
+]
 
 [lints.rust]
 unsafe_code = "forbid"
 
 [lints.clippy]
-# Group lints opt in at warn; individual lints can override via `allow`/`deny`
-# below. priority = -1 keeps targeted overrides authoritative.
 pedantic = { level = "warn", priority = -1 }
 nursery  = { level = "warn", priority = -1 }
 
@@ -20,3 +36,16 @@ nursery  = { level = "warn", priority = -1 }
 opt-level = "z"
 lto = true
 codegen-units = 1
+
+[package.metadata.leptos]
+output-name  = "leptos-chfun"
+site-root    = "target/site"
+site-pkg-dir = "pkg"
+style-file   = "style/main.css"
+assets-dir   = "public"
+site-addr    = "127.0.0.1:3000"
+reload-port  = 3001
+bin-features = ["ssr"]
+bin-default-features = false
+lib-features = ["hydrate"]
+lib-default-features = false
