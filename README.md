@@ -41,7 +41,8 @@ hydration assets serve. It defaults to port 3100; override with
 
 ```sh
 docker build -t leptos-chfun .
-docker run --rm -p 3000:3000 leptos-chfun
+docker run --rm -p 8080:80 leptos-chfun
 ```
 
-Open `http://localhost:3000`.
+The container serves on port 80 (as in production); map any free host port to
+it. Open `http://localhost:8080`.
