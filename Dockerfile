@@ -54,18 +54,27 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
 # ----------------------------------------------------------------------
 FROM debian:${DEBIAN_VERSION}-slim AS runtime
 
-# wget powers the HEALTHCHECK below. Security headers, gzip, caching, and the
+# wget powers the HEALTHCHECK below; libcap2-bin provides setcap (used below to
+# let the non-root server bind port 80). Security headers, gzip, caching, and the
 # dotfile guard that nginx used to provide now live in the axum middleware
 # (src/server/http.rs), so the runtime here is just the server binary.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
         wget \
+        libcap2-bin \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY --from=builder /out/server /app/server
 COPY --from=builder /out/site   /app/site
+
+# Run as a non-root user. The server still binds the privileged port 80 via the
+# cap_net_bind_service file capability (Docker's default caps include
+# NET_BIND_SERVICE), so this needs neither root nor a port change.
+RUN useradd --system --no-create-home --user-group --uid 10001 app \
+    && chown -R app:app /app \
+    && setcap 'cap_net_bind_service=+ep' /app/server
 
 ENV LEPTOS_OUTPUT_NAME=leptos-chfun \
     LEPTOS_SITE_ROOT=site \
@@ -79,4 +88,5 @@ EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
     CMD wget --quiet --tries=1 --spider http://localhost/healthz || exit 1
 
+USER app
 CMD ["/app/server"]

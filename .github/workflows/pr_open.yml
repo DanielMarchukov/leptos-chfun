@@ -77,3 +77,48 @@ jobs:
           path: target/site
           retention-days: 7
           if-no-files-found: error
+
+  docker:
+    name: Docker image build + run
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name == 'push' || github.event.pull_request.draft == false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build the deploy image (load locally)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: leptos-chfun:ci
+          build-args: |
+            GIT_SHA=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run the image and smoke-check (:80, non-root)
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          docker run -d --rm -p 8080:80 --name lc-ci leptos-chfun:ci
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://localhost:8080/healthz >/dev/null 2>&1; then break; fi
+            if [ "$attempt" -eq 60 ]; then
+              echo "container did not become healthy"; docker logs lc-ci || true; exit 1
+            fi
+            sleep 2
+          done
+          test "$(curl -fsS http://localhost:8080/healthz)" = "ok"
+          test "$(curl -fsS http://localhost:8080/version)" = "${EXPECTED_SHA}"
+          curl -fsS http://localhost:8080/ | grep -q "Chean Hui Toh"
+          uid="$(docker exec lc-ci id -u)"
+          test "${uid}" != "0"
+          echo "OK: healthy on :80, /version matches, non-root (uid=${uid})"
+          docker rm -f lc-ci
