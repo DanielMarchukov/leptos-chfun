@@ -62,7 +62,7 @@ jobs:
       - name: Install cargo-leptos
         uses: taiki-e/install-action@v2
         with:
-          tool: cargo-leptos
+          tool: cargo-leptos@0.3.7
 
       - name: Build (cargo-leptos, release)
         run: cargo leptos build --release

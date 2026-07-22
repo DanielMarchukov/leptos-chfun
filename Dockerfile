@@ -1,14 +1,14 @@
 # syntax=docker/dockerfile:1.7
 
-# Pinned versions — bump intentionally.
-# Match RUST_VERSION here with .github/workflows CI so builds are reproducible.
-ARG RUST_VERSION=1.97
+# Rust tracks the latest stable release, matching pr_open.yml's
+# dtolnay/rust-toolchain@stable. DEBIAN_VERSION pins the base OS and is shared by
+# both stages so the builder's glibc matches the runtime's.
 ARG DEBIAN_VERSION=bookworm
 
 # ----------------------------------------------------------------------
 # Stage 1: build server binary + hydration wasm + site assets
 # ----------------------------------------------------------------------
-FROM rust:${RUST_VERSION}-slim AS builder
+FROM rust:slim-${DEBIAN_VERSION} AS builder
 
 # binaryen ships wasm-opt, used by cargo-leptos when optimizing the hydration
 # bundle. ca-certificates lets cargo fetch from crates.io over HTTPS.
@@ -22,9 +22,11 @@ RUN apt-get update \
 RUN rustup target add wasm32-unknown-unknown
 
 # cargo-leptos downloads the Tailwind v4 standalone CLI itself at build time.
+# Pin the version for reproducible builds; bump deliberately and keep in sync
+# with pr_open.yml.
 RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
     --mount=type=cache,target=/usr/local/cargo/git,sharing=locked \
-    cargo install --locked cargo-leptos
+    cargo install --locked --version 0.3.7 cargo-leptos
 
 WORKDIR /app
 COPY . .
