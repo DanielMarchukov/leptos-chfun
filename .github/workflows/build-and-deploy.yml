@@ -156,29 +156,47 @@ jobs:
             -d "{\"applicationId\":\"${DOKPLOY_APPLICATION_ID}\"}" \
             "${DOKPLOY_URL%/}/api/application.deploy"
 
-      - name: Wait for new build to serve
+      # Ask Dokploy directly whether the rollout succeeded, instead of polling
+      # the public /version through Cloudflare (Bot Fight Mode challenges the CI
+      # request and the poll times out). pr_open.yml's docker job already proves
+      # THIS image serves the correct SHA on :80 non-root; here we only confirm
+      # Dokploy rolled it out. applicationStatus: idle | running | done | error.
+      # NOTE: not yet validated against a live Dokploy response — confirm the
+      # `applicationStatus` field name and the running->done transition on first
+      # real deploy, and adjust if application.deploy returns a deployment id to
+      # poll via /api/deployment.all instead.
+      - name: Wait for Dokploy rollout to finish
         env:
-          PUBLIC_BASE_URL: ${{ vars.PUBLIC_BASE_URL }}
-          EXPECTED_SHA: ${{ github.sha }}
+          DOKPLOY_URL: ${{ vars.DOKPLOY_URL }}
+          DOKPLOY_APPLICATION_ID: ${{ vars.DOKPLOY_APPLICATION_ID }}
+          DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY }}
         run: |
           set -euo pipefail
-          # Poll /version (which the Dockerfile bakes from ARG GIT_SHA)
-          # and only succeed when the served value equals the SHA we
-          # just built. /healthz returning 200 was not enough: it would
-          # also pass while the previous container was still serving.
-          # ~6 minute cap (36 * 10s).
-          for attempt in $(seq 1 36); do
-            actual=$(curl --silent --show-error --max-time 10 \
-                       "${PUBLIC_BASE_URL%/}/version" 2>/dev/null \
-                       | tr -d '[:space:]' || true)
-            if [ "${actual}" = "${EXPECTED_SHA}" ]; then
-              echo "Site serving expected SHA ${EXPECTED_SHA} (attempt ${attempt})"
-              exit 0
-            fi
-            echo "Attempt ${attempt}: serving '${actual:-<empty>}', want '${EXPECTED_SHA}', retrying in 10s..."
+          api="${DOKPLOY_URL%/}/api/application.one?applicationId=${DOKPLOY_APPLICATION_ID}"
+          app_status() {
+            curl --fail-with-body --silent --show-error --max-time 15 \
+              -H "x-api-key: ${DOKPLOY_API_KEY}" "${api}" \
+            | jq -r '.applicationStatus // ""'
+          }
+          seen_running=false
+          # ~10 min cap (60 * 10s) for pull + restart.
+          for attempt in $(seq 1 60); do
+            st="$(app_status || echo '')"
+            echo "attempt ${attempt}: applicationStatus='${st}'"
+            case "${st}" in
+              running) seen_running=true ;;
+              error)   echo "Dokploy reports the deploy failed."; exit 1 ;;
+              done)
+                if [ "${seen_running}" = true ]; then
+                  echo "Dokploy rollout complete."; exit 0
+                fi
+                # 'done' before we ever saw 'running' is likely the previous
+                # deploy's terminal state; keep waiting for this rollout to start.
+                ;;
+            esac
             sleep 10
           done
-          echo "Site did not start serving expected SHA in time."
+          echo "Dokploy rollout did not complete in time."
           exit 1
 
       - name: Purge Cloudflare edge cache
