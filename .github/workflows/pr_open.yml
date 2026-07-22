@@ -111,7 +111,7 @@ jobs:
           for attempt in $(seq 1 60); do
             if curl -fsS http://localhost:8080/healthz >/dev/null 2>&1; then break; fi
             if [ "$attempt" -eq 60 ]; then
-              echo "container did not become healthy"; docker logs lc-ci || true; exit 1
+              echo "container did not become healthy"; exit 1
             fi
             sleep 2
           done
