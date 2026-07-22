@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+/* Self-hosted fonts (OFL) — shipped from public/fonts/, no third-party CDN.
+   Fraunces + Geist are variable woff2 (one file per family covers all weights);
+   the weight range lets a single file serve 400/500/600/700 etc. */
+@font-face {
+  font-family: "Fraunces";
+  src: url("/fonts/fraunces-variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fraunces";
+  src: url("/fonts/fraunces-italic-variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/geist-variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans:    "Geist", system-ui, sans-serif;
+
+  --color-ink:        #2d2926;
+  --color-terracotta: #d4a38a;
+  --color-sage:       #8fa382;
+  --color-blush:      #f5e9e2;
+  --color-sage-tint:  #e9ede6;
+  --color-cream:      #faf6f2;
+}
+
+:root {
+  color-scheme: light;
+  font-optical-sizing: auto;
+}
+.font-display { font-variation-settings: "SOFT" 0, "WONK" 1; }
