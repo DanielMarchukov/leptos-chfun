@@ -95,17 +95,18 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          # GIT_SHA is baked into /usr/share/nginx/html/version inside
-          # the image so the deploy job can prove the running container
-          # is THIS build, not the previous one.
+          # GIT_SHA is compiled into the server binary via option_env! and
+          # served by the axum app at /version, so the deploy job can prove the
+          # running container is THIS build, not the previous one.
           build-args: |
             GIT_SHA=${{ github.sha }}
           # GHA cache is per-repo, persists between runs and is free.
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # Multi-platform skipped — VPS is single arch (CAX11 ARM /
-          # CPX11 x86 depending on host). Bump to `platforms: linux/amd64,linux/arm64`
-          # when needed; cold builds get slower.
+          # Single-platform amd64 build on the standard runner. The SSR server
+          # binary is arch-specific, so confirm the VPS arch (`uname -m`) matches;
+          # if the box is arm64, add `platforms: linux/arm64` + a native arm
+          # runner (QEMU-cross-compiling a full Leptos build is very slow).
 
   deploy:
     name: Trigger Dokploy deploy, verify, purge cache
