@@ -8,6 +8,7 @@
   `rustup target add wasm32-unknown-unknown`
 - [`cargo-leptos`](https://github.com/leptos-rs/cargo-leptos):
   `cargo install --locked cargo-leptos`
+- **Bash** and **curl** (used by `scripts/smoke-test.sh`)
 
 ### Run locally
 

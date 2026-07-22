@@ -12,11 +12,17 @@ FROM rust:slim-${DEBIAN_VERSION} AS builder
 
 # binaryen ships wasm-opt, used by cargo-leptos when optimizing the hydration
 # bundle. ca-certificates lets cargo fetch from crates.io over HTTPS.
+# libssl-dev + pkg-config (and perl/make as a fallback) let cargo-leptos's
+# openssl-sys dependency build against the system OpenSSL; the slim base ships
+# none, so the build otherwise compiles OpenSSL from source and fails.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         binaryen \
         ca-certificates \
         pkg-config \
+        libssl-dev \
+        perl \
+        make \
     && rm -rf /var/lib/apt/lists/*
 
 RUN rustup target add wasm32-unknown-unknown

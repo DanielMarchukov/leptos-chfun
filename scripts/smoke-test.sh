@@ -21,6 +21,9 @@ SERVER_PID=""
 FAILURES=0
 RESULTS=()
 
+# Bound every curl so a stuck server can't hang the script (or CI).
+CURL_OPTS=(--connect-timeout 5 --max-time 15)
+
 log() { printf '%s\n' "$*"; }
 
 cleanup() {
@@ -52,7 +55,7 @@ record() {
 assert_status() {
   local name="$1" path="$2" expected="$3"
   local actual
-  actual="$(curl -s -o /dev/null -w '%{http_code}' "${BASE_URL}${path}" || echo "000")"
+  actual="$(curl "${CURL_OPTS[@]}" -s -o /dev/null -w '%{http_code}' "${BASE_URL}${path}" || echo "000")"
   if [[ "${actual}" == "${expected}" ]]; then
     record "${name}" 0
   else
@@ -63,11 +66,24 @@ assert_status() {
 assert_body_contains() {
   local name="$1" path="$2" needle="$3"
   local body
-  body="$(curl -s "${BASE_URL}${path}" || true)"
+  body="$(curl "${CURL_OPTS[@]}" -s "${BASE_URL}${path}" || true)"
   if grep -qF "${needle}" <<<"${body}"; then
     record "${name}" 0
   else
     record "${name}" 1 "response body did not contain '${needle}'"
+  fi
+}
+
+assert_body_equals() {
+  local name="$1" path="$2" expected="$3"
+  local body
+  # Command substitution strips the trailing newline, so an "ok\n" body
+  # compares equal to "ok".
+  body="$(curl "${CURL_OPTS[@]}" -s "${BASE_URL}${path}" || true)"
+  if [[ "${body}" == "${expected}" ]]; then
+    record "${name}" 0
+  else
+    record "${name}" 1 "response body '${body}' != '${expected}'"
   fi
 }
 
@@ -88,14 +104,21 @@ LEPTOS_SITE_ADDR="${ADDR}" \
 SERVER_PID=$!
 
 log "==> Waiting for readiness on ${BASE_URL}/healthz"
-curl --silent --show-error --fail \
-  --retry-connrefused --retry 30 --retry-delay 1 \
+curl "${CURL_OPTS[@]}" --silent --show-error --fail \
+  --retry-connrefused --retry 30 --retry-delay 1 --retry-max-time 60 \
   --output /dev/null \
   "${BASE_URL}/healthz"
 
+# The readiness curl could, in principle, be answered by an unrelated process
+# already bound to the port. Confirm our own server is the one running.
+if ! kill -0 "${SERVER_PID}" 2>/dev/null; then
+  log "FAIL: server process (${SERVER_PID}) exited before readiness"
+  exit 1
+fi
+
 # Prefer the pkg asset paths as actually referenced by the rendered page,
 # falling back to the known output-name paths if parsing finds nothing.
-HTML="$(curl -s "${BASE_URL}/")"
+HTML="$(curl "${CURL_OPTS[@]}" -s "${BASE_URL}/")"
 JS_PATH="$(grep -oE '/pkg/[A-Za-z0-9_.-]+\.js' <<<"${HTML}" | head -n1 || true)"
 WASM_PATH="$(grep -oE '/pkg/[A-Za-z0-9_.-]+\.wasm' <<<"${HTML}" | head -n1 || true)"
 JS_PATH="${JS_PATH:-/pkg/leptos-chfun.js}"
@@ -104,7 +127,7 @@ WASM_PATH="${WASM_PATH:-/pkg/leptos-chfun.wasm}"
 log "==> Running assertions"
 assert_status        "GET / returns 200"                     "/"        "200"
 assert_body_contains  "GET / body contains 'Chean Hui Toh'"   "/"        "Chean Hui Toh"
-assert_body_contains  "GET /healthz body is 'ok'"             "/healthz" "ok"
+assert_body_equals    "GET /healthz body is 'ok'"             "/healthz" "ok"
 assert_status         "GET /healthz returns 200"              "/healthz" "200"
 assert_status         "GET /version returns 200"              "/version" "200"
 assert_status         "GET ${JS_PATH} returns 200"            "${JS_PATH}"   "200"
