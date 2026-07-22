@@ -118,6 +118,10 @@ jobs:
           test "$(curl -fsS http://localhost:8080/healthz)" = "ok"
           test "$(curl -fsS http://localhost:8080/version)" = "${EXPECTED_SHA}"
           curl -fsS http://localhost:8080/ | grep -q "Chean Hui Toh"
+          # The hydration assets must actually serve from the container's site
+          # root, or the page renders but can't hydrate.
+          curl -fsS http://localhost:8080/pkg/leptos-chfun.js   -o /dev/null
+          curl -fsS http://localhost:8080/pkg/leptos-chfun.wasm -o /dev/null
           uid="$(docker exec lc-ci id -u)"
           test "${uid}" != "0"
           echo "OK: healthy on :80, /version matches, non-root (uid=${uid})"
