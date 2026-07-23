@@ -41,7 +41,7 @@ pub fn App() -> impl IntoView {
     provide_meta_context();
     view! {
         <Stylesheet id="leptos" href="/pkg/leptos-chfun.css"/>
-        <Title text="chpilates.fun"/>
+        <Title text="Chean Hui Toh — Pilates, Physiotherapy & Movement"/>
         <Router>
             <main>
                 <Routes fallback=|| "Not found.".into_view()>
