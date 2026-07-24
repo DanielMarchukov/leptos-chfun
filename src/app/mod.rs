@@ -8,6 +8,7 @@ use leptos_router::{
 mod components;
 mod icons;
 mod nav;
+mod sections;
 
 pub use components::{CardFill, Eyebrow, InfoCard};
 pub use icons::{
@@ -15,6 +16,7 @@ pub use icons::{
     IconLinkedIn, IconMenu, IconWind, IconX,
 };
 pub use nav::Nav;
+pub use sections::{About, Hero};
 
 /// Shared copy for `<title>`/`<meta name="description">`/Open Graph — keeps
 /// the practitioner's name in the title (a CI check greps the served HTML
@@ -82,19 +84,18 @@ pub fn App() -> impl IntoView {
 fn HomePage() -> impl IntoView {
     view! {
         <Nav/>
-        <main id="top" class="bg-cream text-ink font-sans">
-            // Placeholder — Tasks 5-8 insert the section stack here, in
-            // order: Hero, About, Credentials, Approach, Gallery,
-            // Testimonial, Instagram ("Follow the Flow"), Footer. The Hero
-            // section becomes the real `#top` target: when it lands, drop
-            // this `id="top"` from `<main>` and move it onto Hero's
-            // `<section>` (per `docs/frontend.md` §2) so exactly one element
-            // owns `#top`. `#about`/`#gallery`/`#connect` land on the About,
-            // Gallery, and Instagram sections respectively; `#services`
-            // needs a home in whichever of Credentials/Approach becomes the
-            // "Services" nav target (frontend.md doesn't name one yet).
+        <main class="bg-cream text-ink font-sans">
+            <Hero/>
+            <About/>
+            // Placeholder — Tasks 6-8 insert the remaining section stack
+            // here, in order: Credentials, Approach, Gallery, Testimonial,
+            // Instagram ("Follow the Flow"), Footer. `#gallery`/`#connect`
+            // land on the Gallery and Instagram sections respectively;
+            // `#services` needs a home in whichever of Credentials/Approach
+            // becomes the "Services" nav target (frontend.md doesn't name
+            // one yet).
             <div class="px-6 py-24 text-center text-ink/60">
-                <p>"Sections land here in Tasks 5-8."</p>
+                <p>"More sections land here in Tasks 6-8."</p>
             </div>
         </main>
     }
