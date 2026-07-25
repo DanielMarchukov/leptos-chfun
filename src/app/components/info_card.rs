@@ -40,7 +40,15 @@ impl CardFill {
 /// `children` is the card body, rendered in the same `gap-4` column as the
 /// title — one or more `<p class="text-base leading-[1.6] text-ink/60">`
 /// elements (a Credentials card renders two short paragraphs; an Approach
-/// card renders one). This replaced an earlier `body: String` prop: the
+/// card renders one). That title+body column itself carries `font-sans` so
+/// the body renders in Geist even if a future caller nests `InfoCard`
+/// somewhere outside `<main>`'s ambient `font-sans` (as `Footer` already
+/// does for its own content) — a single spot covering every card body
+/// regardless of nesting, rather than relying on inherited context. The
+/// title's own `font-display` class still wins on the `<h3>` itself (a
+/// direct class on an element always overrides an inherited value from an
+/// ancestor), so this doesn't change the title's font. This replaced an
+/// earlier `body: String` prop: the
 /// design's Credentials/Approach copy uses inline `SemiBold` emphasis spans
 /// (`docs/frontend.md` §4 / the type-scale table's "Body" row), which a
 /// `String` prop can't express — Leptos renders a `String` as escaped text,
@@ -75,7 +83,7 @@ pub fn InfoCard(
             <div class="flex h-16 w-16 items-center justify-center rounded-[32px] bg-white text-ink">
                 {icon.run()}
             </div>
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4 font-sans">
                 <h3 class="font-display text-[28px] text-ink">{title}</h3>
                 {children()}
             </div>

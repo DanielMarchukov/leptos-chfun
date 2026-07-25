@@ -8,7 +8,7 @@ const INSTAGRAM_URL: &str = "https://instagram.com/ch.pilatesfun";
 
 /// Footer — `docs/frontend.md` §9 (Figma `3:144`).
 ///
-/// `bg-ink text-white`. Left: H1 "Let's find your flow." (Fraunces ~72px,
+/// `bg-ink text-white`. Left: H2 "Let's find your flow." (Fraunces ~72px,
 /// `leading-none`) + "Ready to move with intention?" (`text-white/60`) + the
 /// `mailto:` email link (Geist Medium 24px, `text-terracotta`, underlined).
 /// Right: a link row (Services / Approach / FAQ / Policies) + Instagram &
@@ -29,9 +29,14 @@ const INSTAGRAM_URL: &str = "https://instagram.com/ch.pilatesfun";
 /// LinkedIn has no known URL, so `#` placeholder.
 ///
 /// Responsive: the two columns stack under `md` (`flex-col md:flex-row`), the
-/// link row wraps (`flex-wrap`), the bottom row stacks, and the H1 `clamp()`s
+/// link row wraps (`flex-wrap`), the bottom row stacks, and the H2 `clamp()`s
 /// so nothing overflows a narrow viewport. `font-sans` is set on the root so
-/// the footer renders in Geist even though it sits outside `<main>`.
+/// the footer renders in Geist even though it sits outside `<main>`. The
+/// `mailto:` link also carries `break-words` so the address itself can never
+/// force horizontal scroll at very narrow widths.
+///
+/// This section's heading is an `<h2>`, not an `<h1>` — Hero owns the page's
+/// sole `<h1>` ("Chean Hui Toh"); a page must have exactly one.
 #[allow(clippy::must_use_candidate)]
 #[component]
 pub fn Footer() -> impl IntoView {
@@ -39,14 +44,14 @@ pub fn Footer() -> impl IntoView {
         <footer class="flex flex-col gap-16 bg-ink px-6 pb-20 pt-24 font-sans text-white md:gap-20 md:px-[120px] md:pb-[120px] md:pt-[160px]">
             <div class="flex w-full flex-col gap-12 md:flex-row md:items-end md:justify-between">
                 <div class="flex w-full flex-col items-start gap-8 md:w-[600px]">
-                    <h1 class="font-display text-[clamp(2.5rem,8vw,72px)] leading-none text-white">
+                    <h2 class="font-display text-[clamp(2.5rem,8vw,72px)] leading-none text-white">
                         "Let’s find your flow."
-                    </h1>
+                    </h2>
                     <div class="flex flex-col items-start gap-2">
                         <p class="text-lg text-white/60">"Ready to move with intention?"</p>
                         <a
                             href="mailto:hello@chpilates.fun"
-                            class="font-sans text-2xl font-medium text-terracotta underline"
+                            class="break-words font-sans text-2xl font-medium text-terracotta underline"
                         >
                             "hello@chpilates.fun"
                         </a>

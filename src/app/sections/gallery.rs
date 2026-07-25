@@ -23,6 +23,12 @@ use crate::app::Eyebrow;
 ///   full width) below `md`, and tiles use a `4/3` aspect ratio at that
 ///   width instead of the desktop fixed pixel heights (fixed heights sized
 ///   for a 1200px-wide desktop row look wrong forced onto a phone).
+/// - the desktop heights are gated behind `lg:`, not `md:`: at `md` (~768px)
+///   the same two-column layout kicks in but the row is only ~500px wide, so
+///   the full `400/500/450px` heights would crop the narrow column into a
+///   tall, awkward sliver. `md:h-[200/250/225px]` (roughly the same
+///   width-scaled ratio) fills the tablet range, and `lg:h-[400/500/450px]`
+///   restores the design's exact desktop heights from `1024px` up.
 /// - **Conflict with this task's written spec:** node `3:68` renders the
 ///   "Movement Moments" eyebrow dash + label in **terracotta** (`#d4a38a`),
 ///   not sage — the same About-section-style deviation already flagged in
@@ -51,14 +57,14 @@ pub fn Gallery() -> impl IntoView {
 
             <div class="flex w-full flex-col gap-6">
                 <div class="grid w-full grid-cols-1 gap-6 md:grid-cols-[792fr_384fr]">
-                    <div class="aspect-[4/3] w-full overflow-hidden rounded-[24px] md:aspect-auto md:h-[400px]">
+                    <div class="aspect-[4/3] w-full overflow-hidden rounded-[24px] md:aspect-auto md:h-[200px] lg:h-[400px]">
                         <img
                             src="/img/gallery-01.jpg"
                             alt="Close-up of a wooden Pilates reformer machine in the studio"
                             class="size-full object-cover"
                         />
                     </div>
-                    <div class="aspect-[4/3] w-full overflow-hidden rounded-[24px] md:aspect-auto md:h-[400px]">
+                    <div class="aspect-[4/3] w-full overflow-hidden rounded-[24px] md:aspect-auto md:h-[200px] lg:h-[400px]">
                         <img
                             src="/img/gallery-02.jpg"
                             alt="Close-up of hands guiding a stretch during a session"
@@ -68,14 +74,14 @@ pub fn Gallery() -> impl IntoView {
                 </div>
 
                 <div class="grid w-full grid-cols-1 gap-6 md:grid-cols-[384fr_792fr]">
-                    <div class="aspect-[4/3] w-full overflow-hidden rounded-[24px] md:aspect-auto md:h-[500px]">
+                    <div class="aspect-[4/3] w-full overflow-hidden rounded-[24px] md:aspect-auto md:h-[250px] lg:h-[500px]">
                         <img
                             src="/img/gallery-03.jpg"
                             alt="Sunlit studio hallway lined with Pilates reformers"
                             class="size-full object-cover"
                         />
                     </div>
-                    <div class="aspect-[4/3] w-full overflow-hidden rounded-[24px] md:aspect-auto md:h-[500px]">
+                    <div class="aspect-[4/3] w-full overflow-hidden rounded-[24px] md:aspect-auto md:h-[250px] lg:h-[500px]">
                         <img
                             src="/img/gallery-04.jpg"
                             alt="Chean Hui guiding a client through a reformer exercise"
@@ -85,14 +91,14 @@ pub fn Gallery() -> impl IntoView {
                 </div>
 
                 <div class="grid w-full grid-cols-1 gap-6 md:grid-cols-2">
-                    <div class="aspect-[4/3] w-full overflow-hidden rounded-[24px] md:aspect-auto md:h-[450px]">
+                    <div class="aspect-[4/3] w-full overflow-hidden rounded-[24px] md:aspect-auto md:h-[225px] lg:h-[450px]">
                         <img
                             src="/img/gallery-05.jpg"
                             alt="A water bottle and cork mat set up for a session"
                             class="size-full object-cover"
                         />
                     </div>
-                    <div class="aspect-[4/3] w-full overflow-hidden rounded-[24px] md:aspect-auto md:h-[450px]">
+                    <div class="aspect-[4/3] w-full overflow-hidden rounded-[24px] md:aspect-auto md:h-[225px] lg:h-[450px]">
                         <img
                             src="/img/gallery-06.jpg"
                             alt="Flowing fabric evoking fluid, breath-led movement"

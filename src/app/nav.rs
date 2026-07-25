@@ -15,6 +15,11 @@ const INSTAGRAM_HANDLE: &str = "ch.pilatesfun";
 ///
 /// Anchor contract for later sections (Tasks 5-8 add the matching `id`s):
 /// `#top` (page top / hero), `#about`, `#gallery`, `#services`, `#connect`.
+///
+/// a11y: the two `<nav>` landmarks carry distinguishing `aria-label`s
+/// ("Primary" / "Mobile") so a screen reader doesn't announce two unlabeled
+/// navigations, and the hamburger's `aria-label` tracks `open` ("Open menu" /
+/// "Close menu") alongside its `aria-expanded` state.
 #[allow(clippy::must_use_candidate)]
 #[component]
 pub fn Nav() -> impl IntoView {
@@ -33,7 +38,7 @@ pub fn Nav() -> impl IntoView {
                 <span class="text-sm text-ink/60 md:text-[18px]">" / Pilates"</span>
             </a>
 
-            <nav class="hidden items-center gap-12 text-[15px] text-ink md:flex">
+            <nav aria-label="Primary" class="hidden items-center gap-12 text-[15px] text-ink md:flex">
                 <a href="#about">"About"</a>
                 <a href="#gallery">"Gallery"</a>
                 <a href="#services">"Services"</a>
@@ -51,7 +56,7 @@ pub fn Nav() -> impl IntoView {
             <button
                 type="button"
                 class="flex h-11 w-11 shrink-0 items-center justify-center text-ink md:hidden"
-                aria-label="Menu"
+                aria-label=move || if open.get() { "Close menu" } else { "Open menu" }
                 aria-expanded=move || open.get().to_string()
                 on:click=move |_| set_open.update(|o| *o = !*o)
             >
@@ -62,7 +67,7 @@ pub fn Nav() -> impl IntoView {
         </header>
 
         <Show when=move || open.get()>
-            <nav class="flex flex-col gap-1 bg-cream px-6 pb-6 text-ink md:hidden">
+            <nav aria-label="Mobile" class="flex flex-col gap-1 bg-cream px-6 pb-6 text-ink md:hidden">
                 <a class="flex min-h-11 items-center" href="#about" on:click=close>
                     "About"
                 </a>
