@@ -29,20 +29,27 @@ impl CardFill {
 /// §5 (Approach) define the *identical* card; §5 is the palette/design
 /// reference. `rounded-[40px]` card, `p-12` (48px) padding, `gap-8` (32px)
 /// between the icon chip and the text group, a `64px` white icon chip
-/// (`rounded-[32px]`, 28px icon), a `28px` Fraunces title, `gap-4` (16px) to
-/// a `16px` Geist body at `text-ink/60`.
+/// (`rounded-[32px]`, 28px icon), a `28px` Fraunces title, `gap-4` (16px)
+/// between the title and each body paragraph.
 ///
 /// `icon` takes a `ViewFn` so a caller writes e.g.
 /// `icon=move || view! { <IconGraduationCap class="w-7 h-7"/> }` — this
 /// keeps `InfoCard` icon-agnostic (any `IntoView`, not just the `icons.rs`
 /// set) while staying cheap to clone/re-run under SSR.
 ///
-/// `body` is a plain `String`: it covers the current copy, but the design's
-/// Credentials/Approach body text also uses inline `SemiBold` emphasis spans
-/// (`docs/frontend.md` §4), which a `String` prop can't express (Leptos
-/// renders it as escaped text, not markup). If a section needs that
-/// emphasis, swap this prop for `Children` — noted here since Tasks 6/7
-/// build directly against this signature.
+/// `children` is the card body, rendered in the same `gap-4` column as the
+/// title — one or more `<p class="text-base leading-[1.6] text-ink/60">`
+/// elements (a Credentials card renders two short paragraphs; an Approach
+/// card renders one). This replaced an earlier `body: String` prop: the
+/// design's Credentials/Approach copy uses inline `SemiBold` emphasis spans
+/// (`docs/frontend.md` §4 / the type-scale table's "Body" row), which a
+/// `String` prop can't express — Leptos renders a `String` as escaped text,
+/// not markup. A caller writes the emphasis directly, e.g.
+/// `<p class="text-base leading-[1.6] text-ink/60">"I hold a "
+/// <strong class="font-semibold text-ink">"Bachelor of Physiotherapy"</strong>
+/// "…"</p>` — per the type scale, body emphasis is Geist-600 `text-ink`, not
+/// terracotta (terracotta is reserved for in-heading accents, sage for
+/// eyebrows).
 // `icon: ViewFn` is only ever read via `.run(&self)` here, but Leptos props
 // are owned by convention (the framework's own `<Show>`/`<Suspense>` accept
 // `ViewFn`/`Children` the same way) — clippy can't see that convention.
@@ -55,11 +62,10 @@ pub fn InfoCard(
     /// Card title (Fraunces 28px).
     #[prop(into)]
     title: String,
-    /// Card body copy (Geist 16px, `text-ink/60`).
-    #[prop(into)]
-    body: String,
     /// Background tint — alternate `Blush`/`SageTint` per card.
     fill: CardFill,
+    /// Card body — one or more `<p>` elements; see the doc comment above.
+    children: Children,
 ) -> impl IntoView {
     view! {
         <article class=format!(
@@ -71,7 +77,7 @@ pub fn InfoCard(
             </div>
             <div class="flex flex-col gap-4">
                 <h3 class="font-display text-[28px] text-ink">{title}</h3>
-                <p class="font-sans text-base leading-[1.6] text-ink/60">{body}</p>
+                {children()}
             </div>
         </article>
     }
