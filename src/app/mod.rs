@@ -16,7 +16,9 @@ pub use icons::{
     IconLinkedIn, IconMenu, IconWind, IconX,
 };
 pub use nav::Nav;
-pub use sections::{About, Approach, Credentials, Gallery, Hero, Testimonial};
+pub use sections::{
+    About, Approach, Credentials, Footer, Gallery, Hero, InstagramSection, Testimonial,
+};
 
 /// Shared copy for `<title>`/`<meta name="description">`/Open Graph — keeps
 /// the practitioner's name in the title (a CI check greps the served HTML
@@ -91,13 +93,8 @@ fn HomePage() -> impl IntoView {
             <Approach/>
             <Gallery/>
             <Testimonial/>
-            // Placeholder — Task 8 inserts the remaining section stack here,
-            // in order: Instagram ("Follow the Flow"), Footer. `#connect`
-            // lands on the Instagram section; `#gallery`/`#services` are
-            // already wired up on `Gallery`/`Approach`.
-            <div class="px-6 py-24 text-center text-ink/60">
-                <p>"More sections land here in Task 8."</p>
-            </div>
+            <InstagramSection/>
         </main>
+        <Footer/>
     }
 }
