@@ -64,10 +64,15 @@ pub fn InstagramSection() -> impl IntoView {
                 <h2 class="font-display text-[clamp(2rem,5vw,40px)] leading-[1.1] text-ink">
                     "Follow the Flow"
                 </h2>
-                <div class="flex items-center gap-2.5 rounded-full border border-ink/10 bg-white px-4 py-2.5 text-ink shadow-[0_6px_9px_rgba(0,0,0,0.05)]">
+                <a
+                    href=INSTAGRAM_URL
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center gap-2.5 rounded-full border border-ink/10 bg-white px-4 py-2.5 text-ink shadow-[0_6px_9px_rgba(0,0,0,0.05)]"
+                >
                     <IconInstagram class="w-[18px] h-[18px]".to_string() />
                     <span class="font-sans text-lg font-bold">"@ch.pilatesfun"</span>
-                </div>
+                </a>
             </div>
 
             <Suspense fallback=|| view! { <IgFallbackGrid /> }>

@@ -174,13 +174,15 @@ jobs:
           set -euo pipefail
           api="${DOKPLOY_URL%/}/api/application.one?applicationId=${DOKPLOY_APPLICATION_ID}"
           app_status() {
-            curl --fail-with-body --silent --show-error --max-time 15 \
+            curl --fail-with-body --silent --show-error --max-time 10 \
               -H "x-api-key: ${DOKPLOY_API_KEY}" "${api}" \
             | jq -r '.applicationStatus // ""'
           }
           seen_running=false
-          # ~10 min cap (60 * 10s) for pull + restart.
-          for attempt in $(seq 1 60); do
+          # ~16 min worst-case cap: 48 * (<=10s curl + 10s sleep). Stays under
+          # the 20-min job timeout so the loop's own timeout branch below can
+          # run (and the job isn't SIGKILLed mid-poll, skipping the purge step).
+          for attempt in $(seq 1 48); do
             st="$(app_status || echo '')"
             echo "attempt ${attempt}: applicationStatus='${st}'"
             case "${st}" in

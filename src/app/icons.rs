@@ -26,6 +26,7 @@ pub fn IconGraduationCap(
     view! {
         <svg
             class=class
+            aria-hidden="true"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -47,6 +48,7 @@ pub fn IconAward(#[prop(into, default = "w-6 h-6".to_string())] class: String) -
     view! {
         <svg
             class=class
+            aria-hidden="true"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -69,6 +71,7 @@ pub fn IconBriefcase(
     view! {
         <svg
             class=class
+            aria-hidden="true"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -91,6 +94,7 @@ pub fn IconAmbulance(
     view! {
         <svg
             class=class
+            aria-hidden="true"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -116,6 +120,7 @@ pub fn IconWind(#[prop(into, default = "w-6 h-6".to_string())] class: String) ->
     view! {
         <svg
             class=class
+            aria-hidden="true"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -137,6 +142,7 @@ pub fn IconInfinity(#[prop(into, default = "w-6 h-6".to_string())] class: String
     view! {
         <svg
             class=class
+            aria-hidden="true"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -158,6 +164,7 @@ pub fn IconInstagram(
     view! {
         <svg
             class=class
+            aria-hidden="true"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -179,6 +186,7 @@ pub fn IconLinkedIn(#[prop(into, default = "w-6 h-6".to_string())] class: String
     view! {
         <svg
             class=class
+            aria-hidden="true"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -200,6 +208,7 @@ pub fn IconMenu(#[prop(into, default = "w-6 h-6".to_string())] class: String) ->
     view! {
         <svg
             class=class
+            aria-hidden="true"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -221,6 +230,7 @@ pub fn IconX(#[prop(into, default = "w-6 h-6".to_string())] class: String) -> im
     view! {
         <svg
             class=class
+            aria-hidden="true"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
