@@ -59,13 +59,21 @@ jobs:
       - name: Clippy (client / hydrate, wasm32)
         run: cargo clippy --lib --target wasm32-unknown-unknown --features hydrate -- -D warnings
 
-      # cargo-leptos runs wasm-opt on the release hydration bundle. With no
-      # system wasm-opt it auto-downloads a prebuilt binary that crashes on the
-      # ubuntu-latest runner (the build step dies right after "installing
-      # wasm-opt-..."); binaryen puts a working wasm-opt on PATH, which
-      # cargo-leptos uses instead — the same wasm-opt the Docker image build uses.
-      - name: Install binaryen (wasm-opt)
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends binaryen
+      # cargo-leptos runs wasm-opt on the release hydration bundle and wants
+      # binaryen "version_123". Ubuntu's apt binaryen is 108, which cargo-leptos
+      # rejects as too old; it then auto-downloads a wasm-opt that fails to spawn
+      # on the runner ("No such file or directory" at cargo-leptos
+      # src/ext/sync.rs:83), failing the release build. Put the exact version it
+      # wants on PATH so it uses that and skips the broken download — the Docker
+      # image build already builds against a system wasm-opt the same way.
+      - name: Install binaryen (wasm-opt) on PATH
+        run: |
+          set -euo pipefail
+          ver=version_123
+          curl -fsSL "https://github.com/WebAssembly/binaryen/releases/download/${ver}/binaryen-${ver}-x86_64-linux.tar.gz" -o /tmp/binaryen.tar.gz
+          tar -xzf /tmp/binaryen.tar.gz -C /tmp
+          echo "/tmp/binaryen-${ver}/bin" >> "$GITHUB_PATH"
+          "/tmp/binaryen-${ver}/bin/wasm-opt" --version
 
       - name: Install cargo-leptos
         uses: taiki-e/install-action@v2

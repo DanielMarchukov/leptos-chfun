@@ -179,11 +179,25 @@ jobs:
             | jq -r '.applicationStatus // ""'
           }
           seen_running=false
+          fails=0
           # ~16 min worst-case cap: 48 * (<=10s curl + 10s sleep). Stays under
           # the 20-min job timeout so the loop's own timeout branch below can
           # run (and the job isn't SIGKILLed mid-poll, skipping the purge step).
           for attempt in $(seq 1 48); do
-            st="$(app_status || echo '')"
+            # pipefail makes app_status fail if the curl fails, so a bad URL /
+            # API key / app id surfaces as a request failure rather than a masked
+            # empty status retried for 16 min and mislabeled a rollout timeout.
+            if ! st="$(app_status)"; then
+              fails=$((fails + 1))
+              echo "attempt ${attempt}: Dokploy API request failed (${fails} in a row)"
+              if [ "${fails}" -ge 3 ]; then
+                echo "Dokploy API failed ${fails}x in a row — check DOKPLOY_URL, DOKPLOY_API_KEY, DOKPLOY_APPLICATION_ID."
+                exit 1
+              fi
+              sleep 10
+              continue
+            fi
+            fails=0
             echo "attempt ${attempt}: applicationStatus='${st}'"
             case "${st}" in
               running) seen_running=true ;;
