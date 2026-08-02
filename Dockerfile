@@ -37,12 +37,20 @@ COPY . .
 ARG GIT_SHA=unknown
 ENV GIT_SHA=${GIT_SHA}
 
-# target/ isn't written into the image layer, so copy build outputs to /out
-# before the cache mount detaches.
+# cargo-leptos fetches wasm-bindgen/tailwind from GitHub at build time, which can
+# transiently time out — retry so a network blip can't fail CI (cached crates
+# make retries cheap). target/ isn't in the image layer, so copy outputs to /out
+# before the mount detaches.
 RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
     --mount=type=cache,target=/usr/local/cargo/git,sharing=locked \
     --mount=type=cache,target=/app/target,sharing=locked \
-    cargo leptos build --release \
+    n=0; \
+    until cargo leptos build --release; do \
+        n=$((n + 1)); \
+        [ "$n" -ge 5 ] && { echo "cargo leptos build failed after $n attempts"; exit 1; }; \
+        echo "build attempt $n hit a transient failure; retrying in $((n * 10))s..."; \
+        sleep $((n * 10)); \
+    done \
     && mkdir -p /out \
     && cp target/release/leptos-chfun /out/server \
     && cp -r target/site /out/site
