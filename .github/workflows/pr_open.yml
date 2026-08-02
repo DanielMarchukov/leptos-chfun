@@ -59,31 +59,16 @@ jobs:
       - name: Clippy (client / hydrate, wasm32)
         run: cargo clippy --lib --target wasm32-unknown-unknown --features hydrate -- -D warnings
 
-      - name: Install cargo-leptos
-        uses: taiki-e/install-action@v2
-        with:
-          tool: cargo-leptos@0.3.7
-
-      # Debug build (compile + wasm-bindgen + site assembly). Deliberately NOT
-      # --release: the release build runs wasm-opt, and cargo-leptos's wasm-opt
-      # handling is unreliable on the bare ubuntu-latest runner (its
-      # auto-downloaded wasm-opt fails to spawn — ENOENT at src/ext/sync.rs:83).
-      # The optimized release build AND a running-container smoke test are fully
-      # covered by the "Docker image build + run" job below, so this fast job
-      # keeps a compile/assemble check without the flaky release optimizer.
-      - name: Build (cargo-leptos, debug)
-        run: cargo leptos build
-
-      # cargo-leptos emits the client bundle to target/site (the analog of the
-      # old Trunk dist/). The full SSR deployable is the Docker image built on
-      # tag in build-and-deploy.yml; this artifact is a build-output check.
-      - name: Upload site build
-        uses: actions/upload-artifact@v4
-        with:
-          name: site-${{ github.sha }}
-          path: target/site
-          retention-days: 7
-          if-no-files-found: error
+      # No `cargo leptos build` here on purpose. The two clippy steps above
+      # already compile BOTH targets (server/ssr native and client/hydrate
+      # wasm32), so a separate build adds no compile coverage. The full site
+      # assembly (tailwind + wasm-bindgen + wasm-opt), the optimized release
+      # build, and a running-container smoke test are all done by the "Docker
+      # image build + run" job below — the authoritative build gate.
+      # cargo-leptos's tool orchestration fails to spawn its downloaded helpers
+      # on the bare ubuntu-latest runner (ENOENT at cargo-leptos
+      # src/ext/sync.rs:83) but works fine in the bookworm build container, which
+      # is why the cargo-leptos build lives in the Docker job, not here.
 
   docker:
     name: Docker image build + run
