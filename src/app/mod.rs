@@ -20,9 +20,8 @@ pub use sections::{
     About, Approach, Credentials, Footer, Gallery, Hero, InstagramSection, Testimonial,
 };
 
-/// Shared copy for `<title>`/`<meta name="description">`/Open Graph — keeps
-/// the practitioner's name in the title (a CI check greps the served HTML
-/// for it) and a single source of truth for the OG title/description pair.
+/// Shared `<title>`/description/OG copy — keeps the practitioner's name in
+/// the title (a CI check greps the served HTML for it).
 const SITE_TITLE: &str = "Chean Hui Toh — Pilates, Physiotherapy & Movement";
 const SITE_DESCRIPTION: &str = "Chean Hui Toh brings physiotherapy expertise to Pilates and \
      movement coaching — sessions built to ease pain, build strength, and restore fluid, \
@@ -61,8 +60,8 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
     }
 }
 
-// `#[component]` generates a `pub fn App`; the `must_use_candidate` pedantic
-// lint fires on it, but the return value is always consumed by the framework.
+// `#[component]` generates `pub fn App`; must_use_candidate fires but the
+// framework always consumes the return value.
 #[allow(clippy::must_use_candidate)]
 #[component]
 pub fn App() -> impl IntoView {

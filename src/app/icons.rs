@@ -1,19 +1,6 @@
-//! Lucide icon set used across the landing page (MIT-licensed, lucide.dev).
-//!
-//! Path data is copied verbatim from Lucide, not redrawn. `graduation-cap`,
-//! `award`, `briefcase`, `ambulance`, `wind`, `infinity`, `menu`, `x` come
-//! from the current `lucide-static` package (`viewBox="0 0 24 24"`). Lucide
-//! later dropped its brand icons (trademark policy); `instagram` and
-//! `linkedin` are pinned from `lucide-static@1.0.0`, the last release that
-//! carried them — the path data matches the `IconInstagram` snippet in
-//! `docs/frontend.md` §"Icons (Lucide)" exactly, confirming it's the same
-//! artwork the design spec expects.
-//!
-//! Every icon is `stroke="currentColor"` + `fill="none"`, so color follows
-//! the parent's `text-*` utility. Sizing is via a `class` prop (not a
-//! numeric `size`) so callers can hand it any Tailwind size utility
-//! (`w-7 h-7` in a card, `w-5 h-5` in the nav, …); it defaults to `w-6 h-6`
-//! (Lucide's native 24px) when omitted.
+//! Lucide icon set (MIT, lucide.dev); `stroke="currentColor"`, sized via a
+//! `class` prop (default `w-6 h-6`). `instagram`/`linkedin` are pinned from
+//! `lucide-static@1.0.0` — Lucide later dropped brand icons.
 
 use leptos::prelude::*;
 

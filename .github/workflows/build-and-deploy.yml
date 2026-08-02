@@ -1,32 +1,17 @@
 name: Build and Deploy
 
-# =====================================================================
-# Tag-triggered release pipeline. Replaces release.yml.
-#
-# Flow on `git push --tags`:
-#   1. Build the Docker image on Actions hardware (16 GB RAM, fast),
-#      using BuildKit + GitHub Actions cache so warm rebuilds are quick.
-#   2. Push to GHCR with three tags: vX.Y.Z (from the git tag),
-#      latest, and sha-<short> for unambiguous rollbacks.
-#   3. POST Dokploy /api/application.deploy so Dokploy pulls the
-#      freshly pushed image and restarts the container.
-#   4. Poll PUBLIC_BASE_URL/healthz until 200.
-#   5. Purge Cloudflare edge cache.
-#
-# The Dokploy app MUST be configured with Source = Docker Image
-# pointing at ghcr.io/<owner>/leptos-chfun:latest. The Dokploy
-# tag-webhook trigger MUST be disabled (otherwise it races with this
-# workflow's explicit API deploy call).
+# Tag-push release pipeline: build -> push GHCR -> trigger Dokploy deploy ->
+# poll rollout -> purge Cloudflare. Dokploy app must be Source=Docker Image
+# with its tag-webhook trigger disabled. See README (Key decisions).
 #
 # Required configuration:
-#   secrets.DOKPLOY_API_KEY        from Dokploy -> Profile -> API
-#   secrets.CLOUDFLARE_API_TOKEN   scoped Zone.Cache Purge on chpilates.fun
-#   vars.DOKPLOY_URL               Base URL of the Dokploy panel
-#   vars.DOKPLOY_APPLICATION_ID    UUID of the Dokploy application
+#   secrets.DOKPLOY_API_KEY        Dokploy -> Profile -> API
+#   secrets.CLOUDFLARE_API_TOKEN   Zone.Cache Purge on chpilates.fun
+#   vars.DOKPLOY_URL               Dokploy panel base URL
+#   vars.DOKPLOY_APPLICATION_ID    Dokploy application UUID
 #   vars.PUBLIC_BASE_URL           https://chpilates.fun
 #   vars.CLOUDFLARE_ZONE_ID        Zone ID of chpilates.fun
 #   vars.DEPLOY_ENABLED            "true" to arm the deploy job
-# =====================================================================
 
 on:
   push:
@@ -37,9 +22,8 @@ concurrency:
   group: release-production
   cancel-in-progress: false
 
-# Workflow-level default: read-only. The build-and-push job overrides
-# locally to add packages:write so GHCR push is scoped to one job, not
-# inherited by the deploy job which only makes HTTP API calls.
+# Read-only by default; build-and-push adds packages:write locally so GHCR
+# push is scoped to that job only.
 permissions:
   contents: read
 
@@ -62,10 +46,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
         with:
-          # Don't write GITHUB_TOKEN into .git/config after checkout.
-          # Nothing in this job runs git operations against the remote
-          # — Buildx, metadata-action, and build-push-action all read
-          # the workspace as files.
+          # No git operations against the remote in this job; avoid writing
+          # the token into .git/config.
           persist-credentials: false
 
       - name: Set up Docker Buildx
@@ -95,18 +77,15 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          # GIT_SHA is compiled into the server binary via option_env! and
-          # served by the axum app at /version, so the deploy job can prove the
-          # running container is THIS build, not the previous one.
+          # Compiled in via option_env!, served at /version, so the deploy job
+          # can prove the running container is THIS build.
           build-args: |
             GIT_SHA=${{ github.sha }}
           # GHA cache is per-repo, persists between runs and is free.
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # Single-platform amd64 build on the standard runner. The SSR server
-          # binary is arch-specific, so confirm the VPS arch (`uname -m`) matches;
-          # if the box is arm64, add `platforms: linux/arm64` + a native arm
-          # runner (QEMU-cross-compiling a full Leptos build is very slow).
+          # amd64-only; if the VPS is arm64, add platforms: linux/arm64 + a
+          # native arm runner (QEMU cross-compile is slow for a full Leptos build).
 
   deploy:
     name: Trigger Dokploy deploy, verify, purge cache
@@ -147,8 +126,7 @@ jobs:
           DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY }}
         run: |
           set -euo pipefail
-          # Dokploy pulls the freshly pushed image (ghcr.io/.../:latest)
-          # and restarts the container. No build happens on the VPS.
+          # Dokploy pulls the freshly pushed image and restarts the container.
           curl --fail-with-body --silent --show-error \
             -X POST \
             -H "x-api-key: ${DOKPLOY_API_KEY}" \
@@ -156,15 +134,8 @@ jobs:
             -d "{\"applicationId\":\"${DOKPLOY_APPLICATION_ID}\"}" \
             "${DOKPLOY_URL%/}/api/application.deploy"
 
-      # Ask Dokploy directly whether the rollout succeeded, instead of polling
-      # the public /version through Cloudflare (Bot Fight Mode challenges the CI
-      # request and the poll times out). pr_open.yml's docker job already proves
-      # THIS image serves the correct SHA on :80 non-root; here we only confirm
-      # Dokploy rolled it out. applicationStatus: idle | running | done | error.
-      # NOTE: not yet validated against a live Dokploy response — confirm the
-      # `applicationStatus` field name and the running->done transition on first
-      # real deploy, and adjust if application.deploy returns a deployment id to
-      # poll via /api/deployment.all instead.
+      # Poll Dokploy directly — Cloudflare Bot Fight Mode blocks CI's /version poll.
+      # See README (Key decisions: Deploy gate); not yet validated against a live response.
       - name: Wait for Dokploy rollout to finish
         env:
           DOKPLOY_URL: ${{ vars.DOKPLOY_URL }}
@@ -180,13 +151,10 @@ jobs:
           }
           seen_running=false
           fails=0
-          # ~16 min worst-case cap: 48 * (<=10s curl + 10s sleep). Stays under
-          # the 20-min job timeout so the loop's own timeout branch below can
-          # run (and the job isn't SIGKILLed mid-poll, skipping the purge step).
+          # ~16 min worst-case cap, under the 20-min job timeout.
           for attempt in $(seq 1 48); do
-            # pipefail makes app_status fail if the curl fails, so a bad URL /
-            # API key / app id surfaces as a request failure rather than a masked
-            # empty status retried for 16 min and mislabeled a rollout timeout.
+            # pipefail surfaces a bad URL/key/id as a request failure, not a
+            # masked empty status retried for 16 min.
             if ! st="$(app_status)"; then
               fails=$((fails + 1))
               echo "attempt ${attempt}: Dokploy API request failed (${fails} in a row)"
@@ -206,8 +174,7 @@ jobs:
                 if [ "${seen_running}" = true ]; then
                   echo "Dokploy rollout complete."; exit 0
                 fi
-                # 'done' before we ever saw 'running' is likely the previous
-                # deploy's terminal state; keep waiting for this rollout to start.
+                # Likely the previous deploy's terminal state; keep waiting.
                 ;;
             esac
             sleep 10

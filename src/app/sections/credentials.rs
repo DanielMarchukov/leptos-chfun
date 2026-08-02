@@ -2,23 +2,8 @@ use leptos::prelude::*;
 
 use crate::app::{CardFill, Eyebrow, IconAward, IconBriefcase, IconGraduationCap, InfoCard};
 
-/// Credentials — `docs/frontend.md` §4 (Figma `6:24`).
-///
-/// `bg-cream`, centered header (`Eyebrow "Credentials & Training"` in sage +
-/// an H2), then a 3-card row of the canonical `InfoCard` (§5/Approach is the
-/// palette reference; this section uses the identical treatment). Fill
-/// sequence: `blush` / `sage-tint` / `blush`. No `id` — this section isn't a
-/// Nav anchor target (`#services` lands on `Approach`).
-///
-/// A direct `get_design_context` pull on `6:24` supplied the full card copy
-/// (`frontend.md`'s prose truncates it with "…") plus two details past the
-/// written spec:
-/// - the header-to-card-row gap is `64px` here, vs Approach's `80px` — kept
-///   as literal per-section values rather than forcing them equal.
-/// - the "Qualifications" and "Training & Certifications" cards each render
-///   **two** body paragraphs (the "Experience" card too); `InfoCard`'s
-///   `children` slot takes multiple `<p>` siblings for this, spaced by the
-///   same `gap-4` (16px) as the title.
+/// Credentials (Figma `6:24`) — sage eyebrow + H2, three `InfoCard`s (blush /
+/// sage-tint / blush). No `id`; not a Nav anchor. See README (Design notes).
 #[allow(clippy::must_use_candidate)]
 #[component]
 pub fn Credentials() -> impl IntoView {

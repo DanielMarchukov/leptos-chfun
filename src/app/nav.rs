@@ -2,24 +2,11 @@ use leptos::prelude::*;
 
 use crate::app::{IconInstagram, IconMenu, IconX};
 
-/// Instagram handle used across the site (nav, footer, Instagram section) —
-/// `docs/frontend.md` §8 "Follow the Flow" names the handle pill
-/// `@ch.pilatesfun`.
+/// Instagram handle shared across nav, footer, and the Instagram section.
 const INSTAGRAM_HANDLE: &str = "ch.pilatesfun";
 
-/// Sticky top nav — `docs/frontend.md` §1 (`3:8`, h=94).
-///
-/// The mobile menu is the first hydration-interactive piece in the app: a
-/// `signal` toggled by the hamburger button, rendered via `<Show>`. SSR
-/// always renders the closed state; hydration wakes the toggle.
-///
-/// Anchor contract for later sections (Tasks 5-8 add the matching `id`s):
-/// `#top` (page top / hero), `#about`, `#gallery`, `#services`, `#connect`.
-///
-/// a11y: the two `<nav>` landmarks carry distinguishing `aria-label`s
-/// ("Primary" / "Mobile") so a screen reader doesn't announce two unlabeled
-/// navigations, and the hamburger's `aria-label` tracks `open` ("Open menu" /
-/// "Close menu") alongside its `aria-expanded` state.
+/// Sticky top nav (Figma `3:8`), mobile menu via a signal + `<Show>`, SSR
+/// closed by default; the two `<nav>`s carry distinct aria-labels. See README.
 #[allow(clippy::must_use_candidate)]
 #[component]
 pub fn Nav() -> impl IntoView {

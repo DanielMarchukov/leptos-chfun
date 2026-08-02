@@ -1,24 +1,11 @@
-//! Shared, isomorphic types that cross the server-fn boundary (e.g. `FeedItem`).
-//!
-//! Kept here (not ssr-gated) so both the client (`hydrate`) and server (`ssr`)
-//! builds compile them — the Instagram grid reads them across the `get_feed`
-//! server-function boundary, and a Leptos `Resource` must serialize its value
-//! from SSR to the hydrating client. The Phase-4 backend
-//! (`docs/instagram.md` §2) maps raw `IgMedia` into these; until then the
-//! `get_feed` stub returns an empty feed and the grid renders its fallback.
+//! Shared isomorphic types crossing the `get_feed` server-fn boundary (not
+//! ssr-gated, so both `hydrate` and `ssr` builds compile them). See README
+//! (Features: Instagram feed contract).
 
 use serde::{Deserialize, Serialize};
 
-/// One Instagram post rendered in the "Follow the Flow" grid.
-///
-/// The `id`-stable `image_path` is a **local** copy served from `/media/ig/`
-/// (Phase 4 downloads the bytes so the grid survives Instagram's expiring CDN
-/// URLs); `permalink` is the public instagram.com link the tile clicks out to.
-///
-/// Derives `Serialize`/`Deserialize` because the value crosses the server-fn
-/// boundary (SSR serializes the `Resource` value into the page, the client
-/// deserializes it on hydrate); `Eq` accompanies `PartialEq` to satisfy
-/// clippy's `derive_partial_eq_without_eq` (every field is itself `Eq`).
+/// One Instagram post rendered in the "Follow the Flow" grid. Serializes
+/// SSR→hydrate via the `get_feed` `Resource`. See README (Features).
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct FeedItem {
     /// Instagram media id — the `<For>` key and the `<id>.jpg` cache filename.
@@ -35,11 +22,7 @@ pub struct FeedItem {
     pub timestamp: String,
 }
 
-/// The kind of an Instagram post.
-///
-/// Reels are `media_type=VIDEO` + `media_product_type=REELS` upstream
-/// (`docs/instagram.md` §1); the grid uses the poster image for both and only
-/// differs by the play overlay.
+/// The kind of an Instagram post — reels get a play overlay in the grid.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum FeedKind {
     /// A still image (`IMAGE` / `CAROUSEL_ALBUM`).

@@ -2,22 +2,9 @@ use leptos::prelude::*;
 
 use crate::app::{CardFill, Eyebrow, IconAmbulance, IconInfinity, IconWind, InfoCard};
 
-/// Approach — "The Philosophy" — `docs/frontend.md` §5 (Figma `3:43`), the
-/// **canonical** reference for the `InfoCard` fill palette/design.
-///
-/// `bg-cream`, centered header (`Eyebrow "The Philosophy"` in sage + an H2
-/// capped at `700px`), then a 3-card row of `InfoCard`. Fill sequence:
-/// `sage-tint` / `blush` / `sage-tint`. `id="services"` lives here (not on
-/// Credentials) — it's the Nav "Services" anchor target, since this section
-/// is closest to describing her method/practice.
-///
-/// A direct `get_design_context` pull on `3:43` supplied the full card copy
-/// (`frontend.md`'s prose truncates it) and two details past the written
-/// spec: the header-to-card-row gap is `80px` here (Credentials uses `64px`,
-/// kept as a distinct per-section literal), and the header column is capped
-/// at `700px` wide (Credentials' header has no such cap). Unlike Credentials,
-/// each card here renders a single body paragraph with no `SemiBold`
-/// emphasis spans.
+/// Approach — "The Philosophy" (Figma `3:43`), `id="services"` — canonical
+/// `InfoCard` fill palette reference (sage-tint / blush / sage-tint). See
+/// README (Design notes).
 #[allow(clippy::must_use_candidate)]
 #[component]
 pub fn Approach() -> impl IntoView {

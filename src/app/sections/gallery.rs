@@ -2,39 +2,8 @@ use leptos::prelude::*;
 
 use crate::app::Eyebrow;
 
-/// Gallery — "Movement Moments" — `docs/frontend.md` §6 (Figma `3:68`).
-///
-/// `bg-cream`. Header row: left column (`Eyebrow "Movement Moments"` + H2
-/// `"Visualizing the flow."`) beside a supporting paragraph on the right;
-/// stacks (text above paragraph) under `md`. Below it, an **asymmetric photo
-/// grid** of the six curated `/img/gallery-0N.jpg` stills — this is static
-/// content, never the live Instagram feed (`InstagramSection`, Task 8, owns
-/// `get_feed()`). `id="gallery"` is the Nav "Gallery" anchor target.
-///
-/// A direct `get_design_context` pull on `3:68` confirmed the values past
-/// what `frontend.md`'s prose captures:
-/// - tile corner radius is `24px` (`rounded-[24px]`), not the card radius
-///   (`40px`) used by `InfoCard`.
-/// - the three rows are literally `792:384`, `384:792`, and `588:588` (px)
-///   at heights `400`/`500`/`450`, gap `24px` both between and within rows —
-///   implemented as three `md:grid-cols-[<w1>fr_<w2>fr]` rows so the ratio
-///   (not the absolute px) holds at any content width, with a `24px` gap
-///   (`gap-6`) throughout. Each row collapses to `grid-cols-1` (stacked,
-///   full width) below `md`, and tiles use a `4/3` aspect ratio at that
-///   width instead of the desktop fixed pixel heights (fixed heights sized
-///   for a 1200px-wide desktop row look wrong forced onto a phone).
-/// - the desktop heights are gated behind `lg:`, not `md:`: at `md` (~768px)
-///   the same two-column layout kicks in but the row is only ~500px wide, so
-///   the full `400/500/450px` heights would crop the narrow column into a
-///   tall, awkward sliver. `md:h-[200/250/225px]` (roughly the same
-///   width-scaled ratio) fills the tablet range, and `lg:h-[400/500/450px]`
-///   restores the design's exact desktop heights from `1024px` up.
-/// - **Conflict with this task's written spec:** node `3:68` renders the
-///   "Movement Moments" eyebrow dash + label in **terracotta** (`#d4a38a`),
-///   not sage — the same About-section-style deviation already flagged in
-///   `about.rs`. Implemented per the written spec (`Eyebrow`'s sage
-///   default) rather than silently matching the live design; flagged here
-///   for the same design follow-up.
+/// Gallery — "Movement Moments" (Figma `3:68`), `id="gallery"`. Curated static
+/// asymmetric photo grid, not the IG feed. See README (Design notes).
 #[allow(clippy::must_use_candidate)]
 #[component]
 pub fn Gallery() -> impl IntoView {

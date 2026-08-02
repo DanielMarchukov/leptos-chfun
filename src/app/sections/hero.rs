@@ -1,25 +1,7 @@
 use leptos::prelude::*;
 
-/// Hero — `docs/frontend.md` §2 (Figma `3:18`, 1440×900).
-///
-/// Full-bleed `/img/hero.jpg` with a `bg-black/5` overlay, a centered
-/// Fraunces wordmark + `PILATES • PHYSIOTHERAPY • MOVEMENT` label row (each
-/// word separated by an `8px` `bg-terracotta` dot), and a bottom-center
-/// scroll cue. This is the sole owner of `id="top"` (the Nav wordmark link
-/// targets it; `HomePage` no longer puts `id="top"` on `<main>`).
-///
-/// The Figma frame is a fixed 1440×900 desktop layout; two rules keep it
-/// sane on a phone-sized viewport instead of imposing a giant fixed block or
-/// clipping the label row:
-/// - height is `min-h-[600px] h-[100svh] md:h-[900px]` — it fills the
-///   viewport (via small-viewport-height units, which stay correct behind
-///   mobile browser chrome) up to a sensible floor, then locks to the
-///   design's `900px` from `md` up.
-/// - the wordmark keeps the design's `clamp()` down to `3.5rem` so `112px`
-///   scales with viewport width instead of overflowing a narrow screen.
-/// - the label row wraps (`flex-wrap`) and starts at a smaller size/gap,
-///   reaching the design's `18px` text / `16px` gap only from `md` up, so
-///   "Pilates • Physiotherapy • Movement" never forces horizontal scroll.
+/// Hero (Figma `3:18`) — full-bleed photo, Fraunces wordmark, terracotta-dot
+/// label row, scroll cue; sole owner of `id="top"`. See README (Design notes).
 #[allow(clippy::must_use_candidate)]
 #[component]
 pub fn Hero() -> impl IntoView {

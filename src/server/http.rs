@@ -32,19 +32,8 @@ async fn version() -> impl IntoResponse {
     )
 }
 
-/// nginx-parity middleware: everything `nginx.conf` used to provide at the
-/// reverse-proxy layer, reproduced as `tower`/axum middleware.
-///
-/// Sets security headers, gzip-compresses responses, applies path-based
-/// `Cache-Control`, and guards dotfile paths. Wraps the *whole* router
-/// (including the `/pkg` static-file and SPA fallback), so callers should
-/// apply it last, after every route, merge, and `.fallback()` call.
-///
-/// Layer order (outermost to innermost, i.e. request flow top to bottom):
-/// security headers -> compression -> dotfile guard -> cache-control ->
-/// routes. Security headers sit outermost so they land on every response,
-/// including a 404 from the dotfile guard; cache-control sits innermost so
-/// it can inspect the real response a handler produced.
+/// nginx-parity middleware — security headers, gzip, cache control, dotfile
+/// guard. Apply last, after every route/merge/fallback; outermost-to-innermost.
 pub fn apply_middleware<S>(router: Router<S>) -> Router<S>
 where
     S: Clone + Send + Sync + 'static,
@@ -71,15 +60,9 @@ where
         ))
 }
 
-/// Refuse any request for a hidden (dot-prefixed) path segment, e.g.
-/// `/.env` or `/foo/.git/config`, mirroring nginx's
-/// `location ~ /\.(?!well-known)`. `/.well-known/...` stays reachable, e.g.
-/// for ACME challenges or `security.txt`.
-///
-/// The fallback (`leptos_axum::file_and_error_handler` -> tower-http
-/// `ServeDir`) percent-decodes the request path before resolving a file, so
-/// the guard must decode too (e.g. `/%2eenv` decodes to `/.env`) or it can
-/// be bypassed.
+/// Blocks dot-prefixed paths (e.g. `/.env`), mirroring nginx; `/.well-known/`
+/// stays reachable. Percent-decodes like the file-serving fallback does, or
+/// `/%2eenv` would bypass the guard.
 async fn dotfile_guard(req: Request, next: Next) -> Response {
     if is_dotfile_blocked(req.uri().path()) {
         return StatusCode::NOT_FOUND.into_response();
@@ -87,11 +70,8 @@ async fn dotfile_guard(req: Request, next: Next) -> Response {
     next.run(req).await
 }
 
-/// Pure decision function for [`dotfile_guard`]: percent-decodes `raw_path`
-/// and reports whether it should be blocked. A malformed (non-UTF-8)
-/// percent-encoding is blocked outright; otherwise a decoded path is
-/// blocked when it contains a `/.` segment, unless it's under
-/// `/.well-known/`.
+/// Pure decision function for [`dotfile_guard`]: blocks a decoded `/.`
+/// segment (or malformed percent-encoding) unless under `/.well-known/`.
 fn is_dotfile_blocked(raw_path: &str) -> bool {
     percent_encoding::percent_decode_str(raw_path)
         .decode_utf8()
@@ -100,15 +80,9 @@ fn is_dotfile_blocked(raw_path: &str) -> bool {
         })
 }
 
-/// Path/response-based `Cache-Control`, mirroring nginx's two cache tiers:
-/// content-hashed assets under `/pkg/` are immutable for a year; HTML
-/// documents are never cached. A response that already carries its own
-/// `Cache-Control` (e.g. `/version`) is left untouched.
-///
-/// A missing asset under `/pkg/` (e.g. `/pkg/missing.js`) falls through to
-/// `file_and_error_handler`'s HTML error shell; only a *successful* `/pkg/`
-/// response gets the immutable treatment, so that 404 shell instead falls
-/// into the `is_html` no-cache branch below.
+/// Path/response-based `Cache-Control`, mirroring nginx's two tiers: `/pkg/`
+/// assets are immutable for a year, HTML is never cached; a response with its
+/// own `Cache-Control` (e.g. `/version`) is left untouched.
 async fn cache_control(req: Request, next: Next) -> Response {
     let is_pkg_asset = req.uri().path().starts_with("/pkg/");
     let mut res = next.run(req).await;
@@ -133,8 +107,7 @@ async fn cache_control(req: Request, next: Next) -> Response {
 }
 
 /// Pure decision function for [`cache_control`]: picks the `Cache-Control`
-/// value (if any) for a response, given whether it's a `/pkg/` asset,
-/// whether the response succeeded, and whether it's HTML.
+/// value, if any, for a `/pkg/`/success/HTML combination.
 const fn cache_value_for(
     is_pkg_asset: bool,
     is_success: bool,

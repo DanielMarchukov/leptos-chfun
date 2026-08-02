@@ -1,20 +1,7 @@
 use leptos::prelude::*;
 
-/// Testimonial — `docs/frontend.md` §7 (Figma `3:123`).
-///
-/// `bg-sage-tint` band, centered: a Fraunces 40px quote capped at `800px`
-/// wide, then a `56px` round avatar (`/img/avatar-elena.jpg`) beside
-/// "Elena R." (Geist SemiBold 16px) / "Client since 2021" (Geist 14px
-/// `text-ink/60`). No `id` — not a Nav anchor target. Placeholder content
-/// until a real testimonial exists.
-///
-/// A direct `get_design_context` pull on `3:123` supplied the exact quote
-/// text and attribution (`frontend.md`'s prose only describes the layout),
-/// plus the avatar radius: the design's `56px` frame is `rounded-[28px]`,
-/// i.e. fully round at that size — implemented as `size-14 rounded-full`
-/// per the image drop-in convention (round-crops any square-ish source),
-/// which is equivalent at `56px` and stays round if the slot size ever
-/// changes.
+/// Testimonial (Figma `3:123`) — sage-tint quote band + avatar attribution.
+/// No `id`; placeholder content. See README (Design notes, Key decisions).
 #[allow(clippy::must_use_candidate)]
 #[component]
 pub fn Testimonial() -> impl IntoView {

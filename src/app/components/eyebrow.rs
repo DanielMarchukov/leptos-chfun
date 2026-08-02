@@ -1,24 +1,15 @@
 use leptos::prelude::*;
 
-/// Small "dash + uppercase label" heading placed above section titles
-/// (`docs/frontend.md` §"Radii & spacing": `40px × 1px` dash, `12px` gap,
-/// label).
-///
-/// `color_class` must be a *complete* Tailwind text-color utility (e.g. the
-/// default `"text-sage"`) rather than a bare color name: the dash reuses it
-/// via `bg-current` instead of duplicating a second `bg-*` class, and
-/// Tailwind's build-time class scanner only ever sees whole literal utility
-/// strings (in this file, or at call sites that pass a literal) — never a
-/// runtime-assembled fragment like `format!("bg-{color}")`, which the
-/// scanner can't see and so would be purged from the compiled CSS.
+/// Small "dash + uppercase label" heading shown above section titles. See
+/// README (Design notes: Radii & spacing).
 #[allow(clippy::must_use_candidate)]
 #[component]
 pub fn Eyebrow(
     /// The label text, rendered uppercase.
     #[prop(into)]
     label: String,
-    /// Full Tailwind text-color utility for the dash + label. Every section
-    /// in the design uses sage (`--color-sage`), hence the default.
+    /// Full Tailwind text-color utility for the dash + label (must be a
+    /// literal, e.g. `"text-sage"`, so Tailwind's scanner can see it).
     #[prop(into, default = "text-sage".to_string())]
     color_class: String,
 ) -> impl IntoView {

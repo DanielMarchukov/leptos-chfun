@@ -3,54 +3,20 @@ use leptos::prelude::*;
 use crate::app::IconInstagram;
 use crate::models::{FeedItem, FeedKind};
 
-/// Public Instagram profile for @ch.pilatesfun — the grid header handle pill
-/// and the "Follow on Instagram" CTA both link here (matches `nav.rs`).
+/// Public Instagram profile URL — linked from the handle pill and CTA.
 const INSTAGRAM_URL: &str = "https://instagram.com/ch.pilatesfun";
 
-/// Instagram feed source — **Phase 4 stub**.
-///
-/// This is the only `get_feed()`-driven surface in the app. It is deliberately
-/// co-located with the sole UI that calls it and lives in a module compiled
-/// for BOTH `ssr` and `hydrate`: the `#[server]` macro emits the server body
-/// under `ssr` and the client-side call otherwise, so the symbol must exist in
-/// the hydrate build too. Phase 4 replaces the body with a read of the
-/// server-side feed cache (`docs/instagram.md` §4); until then it returns an
-/// empty feed, so the section renders its static fallback tiles. `Ok(vec![])`
-/// plus the caller's `.unwrap_or_default()` means even a failed call degrades
-/// to `[]` → fallback, never a panic.
-// `async` with no `.await` is required by the `#[server]` contract (server
-// functions are always async) and Phase 4's body will await the cache read;
-// clippy's `unused_async` can't see that future obligation.
+/// Instagram feed source — Phase-4 stub returning `[]` (section shows its static
+/// fallback). Shared ssr/hydrate module so hydrate can resolve the symbol.
+// #[server] fns are always async; Phase 4's body will await the cache read.
 #[allow(clippy::unused_async)]
 #[server(GetFeed)]
 pub async fn get_feed() -> Result<Vec<FeedItem>, ServerFnError> {
     Ok(vec![])
 }
 
-/// Instagram — "Follow the Flow" — `docs/frontend.md` §8 (Figma `3:131`).
-///
-/// `bg-cream`, centered: an H2 + a rounded white **handle pill**
-/// (`IconInstagram` + `@ch.pilatesfun`), then the `Resource`-driven grid, then
-/// a dark **"Follow on Instagram"** pill CTA. `id="connect"` is the Nav
-/// "Connect" anchor target.
-///
-/// The grid binds to [`get_feed`] via a `Resource` (its `Vec<FeedItem>` value
-/// serializes from SSR into the page and deserializes on hydrate — no client
-/// refetch). `<Suspense>` covers the pending state, then `<Show>` swaps between
-/// the real `<For>` grid (non-empty feed) and the static fallback (empty). With
-/// the Phase-4 stub returning `[]`, the fallback always renders; the `<For>`
-/// branch (including the `FeedKind::Reel` play overlay) is wired for Phase 4.
-///
-/// A direct `get_design_context` pull on `3:131` supplied the exact treatment:
-/// section gap `64px`, header gap `10px`; H2 "Follow the Flow" (the design tags
-/// it Fraunces SemiBold 40px — rendered here as plain `font-display` for weight
-/// parity with the other section H2s, which the type scale fixes at Fraunces
-/// 400; flagged, not silently thickened); handle pill `bg-white` + `18px` bold
-/// Geist + a soft `0 6px 9px rgba(0,0,0,.05)` shadow; a `368px` 3-col grid at
-/// gap `16px` over two rows with `rounded-[24px]` tiles; the CTA `bg-ink` white
-/// SemiBold 16px pill at `px-28 py-16` with a `0 10px 12px rgba(0,0,0,.1)`
-/// shadow. Responsive: the grid is `grid-cols-2 md:grid-cols-3` with
-/// `aspect-square` tiles, header and CTA stay centered.
+/// Instagram — "Follow the Flow" (Figma `3:131`), `id="connect"`. `get_feed`
+/// Resource → Suspense/Show → static fallback (empty stub). See README.
 #[allow(clippy::must_use_candidate)]
 #[component]
 pub fn InstagramSection() -> impl IntoView {
@@ -116,12 +82,8 @@ pub fn InstagramSection() -> impl IntoView {
     }
 }
 
-/// One real-feed tile — an image linking out to its `permalink`, with a play
-/// glyph overlaid for reels.
-///
-/// Passed as `<For>`'s `children`; exercised only once Phase 4 supplies a
-/// non-empty feed (the stub yields `[]`), but wired and type-checked now so the
-/// Phase-4 swap touches no UI.
+/// One real-feed tile — image linking to its `permalink`, with a play glyph
+/// for reels. Wired for Phase 4; unexercised while the stub yields `[]`.
 fn ig_tile(item: FeedItem) -> impl IntoView {
     let is_reel = matches!(item.kind, FeedKind::Reel);
     view! {
@@ -148,14 +110,8 @@ fn ig_tile(item: FeedItem) -> impl IntoView {
     }
 }
 
-/// Static fallback grid — six square tinted tiles matching the design's 2×3
-/// layout.
-///
-/// Tiles alternate `sage-tint` / `blush` and each centers a muted
-/// `IconInstagram`. Rendered while the feed is pending (Suspense) and when it
-/// is empty (Show), which — with the Phase-4 stub — is always. Uses only design
-/// tokens and needs no new image assets, so it reads as a calm "feed
-/// placeholder" rather than a broken grid.
+/// Static fallback grid — six tiles alternating `sage-tint`/`blush` with a
+/// muted `IconInstagram`. Shown while pending or empty (always, per the stub).
 #[allow(clippy::must_use_candidate)]
 #[component]
 fn IgFallbackGrid() -> impl IntoView {
