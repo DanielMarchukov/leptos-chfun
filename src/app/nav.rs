@@ -2,16 +2,13 @@ use leptos::prelude::*;
 
 use crate::app::{IconInstagram, IconMenu, IconX};
 
-/// Instagram handle shared across nav, footer, and the Instagram section.
-const INSTAGRAM_HANDLE: &str = "ch.pilatesfun";
-
 /// Sticky top nav (Figma `3:8`), mobile menu via a signal + `<Show>`, SSR
 /// closed by default; the two `<nav>`s carry distinct aria-labels. See README.
 #[allow(clippy::must_use_candidate)]
 #[component]
 pub fn Nav() -> impl IntoView {
     let (open, set_open) = signal(false);
-    let instagram_href = format!("https://instagram.com/{INSTAGRAM_HANDLE}");
+    let instagram_href = crate::app::INSTAGRAM_URL;
 
     let close = move |_| set_open.set(false);
 
@@ -31,7 +28,7 @@ pub fn Nav() -> impl IntoView {
                 <a href="#services">"Services"</a>
                 <a href="#connect">"Connect"</a>
                 <a
-                    href=instagram_href.clone()
+                    href=instagram_href
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Instagram"
@@ -69,7 +66,7 @@ pub fn Nav() -> impl IntoView {
                 </a>
                 <a
                     class="flex min-h-11 items-center gap-2"
-                    href=instagram_href.clone()
+                    href=instagram_href
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Instagram"

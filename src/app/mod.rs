@@ -27,6 +27,10 @@ const SITE_DESCRIPTION: &str = "Chean Hui Toh brings physiotherapy expertise to 
      movement coaching — sessions built to ease pain, build strength, and restore fluid, \
      confident movement.";
 
+/// Instagram profile — one source of truth for the nav, footer, and section.
+pub(crate) const INSTAGRAM_HANDLE: &str = "ch.pilatesfun";
+pub(crate) const INSTAGRAM_URL: &str = "https://instagram.com/ch.pilatesfun";
+
 #[must_use]
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {

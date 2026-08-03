@@ -1,9 +1,6 @@
 use leptos::prelude::*;
 
-use crate::app::{IconInstagram, IconLinkedIn};
-
-/// Public Instagram profile URL — matches `nav.rs` / the Instagram section.
-const INSTAGRAM_URL: &str = "https://instagram.com/ch.pilatesfun";
+use crate::app::{IconInstagram, IconLinkedIn, INSTAGRAM_URL};
 
 /// Footer (Figma `3:144`) — dark footer, email CTA, link row, social icons,
 /// copyright. Heading is `<h2>`; Hero owns the page's sole `<h1>`. See README

@@ -9,7 +9,6 @@ name: Build and Deploy
 #   secrets.CLOUDFLARE_API_TOKEN   Zone.Cache Purge on chpilates.fun
 #   vars.DOKPLOY_URL               Dokploy panel base URL
 #   vars.DOKPLOY_APPLICATION_ID    Dokploy application UUID
-#   vars.PUBLIC_BASE_URL           https://chpilates.fun
 #   vars.CLOUDFLARE_ZONE_ID        Zone ID of chpilates.fun
 #   vars.DEPLOY_ENABLED            "true" to arm the deploy job
 
@@ -77,8 +76,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          # Compiled in via option_env!, served at /version, so the deploy job
-          # can prove the running container is THIS build.
+          # Compiled in via option_env! and served at /version — the PR docker
+          # smoke test asserts it; here it just stamps the image with its commit.
           build-args: |
             GIT_SHA=${{ github.sha }}
           # GHA cache is per-repo, persists between runs and is free.
@@ -101,7 +100,6 @@ jobs:
           DOKPLOY_URL: ${{ vars.DOKPLOY_URL }}
           DOKPLOY_APPLICATION_ID: ${{ vars.DOKPLOY_APPLICATION_ID }}
           DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY }}
-          PUBLIC_BASE_URL: ${{ vars.PUBLIC_BASE_URL }}
           CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
@@ -110,7 +108,6 @@ jobs:
           [ -n "${DOKPLOY_URL:-}" ]            || missing+=("vars.DOKPLOY_URL")
           [ -n "${DOKPLOY_APPLICATION_ID:-}" ] || missing+=("vars.DOKPLOY_APPLICATION_ID")
           [ -n "${DOKPLOY_API_KEY:-}" ]        || missing+=("secrets.DOKPLOY_API_KEY")
-          [ -n "${PUBLIC_BASE_URL:-}" ]        || missing+=("vars.PUBLIC_BASE_URL")
           [ -n "${CLOUDFLARE_ZONE_ID:-}" ]     || missing+=("vars.CLOUDFLARE_ZONE_ID")
           [ -n "${CLOUDFLARE_API_TOKEN:-}" ]   || missing+=("secrets.CLOUDFLARE_API_TOKEN")
           if [ ${#missing[@]} -gt 0 ]; then
@@ -153,11 +150,11 @@ jobs:
           fails=0
           # ~16 min worst-case cap, under the 20-min job timeout.
           for attempt in $(seq 1 48); do
-            # pipefail surfaces a bad URL/key/id as a request failure, not a
-            # masked empty status retried for 16 min.
-            if ! st="$(app_status)"; then
+            # A bad URL/key/id (pipefail on curl) OR a missing/empty
+            # applicationStatus is a contract failure, not a "keep waiting".
+            if ! st="$(app_status)" || [ -z "${st}" ]; then
               fails=$((fails + 1))
-              echo "attempt ${attempt}: Dokploy API request failed (${fails} in a row)"
+              echo "attempt ${attempt}: Dokploy request failed or returned no applicationStatus (${fails} in a row)"
               if [ "${fails}" -ge 3 ]; then
                 echo "Dokploy API failed ${fails}x in a row — check DOKPLOY_URL, DOKPLOY_API_KEY, DOKPLOY_APPLICATION_ID."
                 exit 1

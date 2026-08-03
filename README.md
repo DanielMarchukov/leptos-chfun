@@ -174,8 +174,8 @@ what a token/type-scale table captures. Figma node ids in parentheses.
 
 - Rust (stable) with the `wasm32-unknown-unknown` target:
   `rustup target add wasm32-unknown-unknown`
-- [`cargo-leptos`](https://github.com/leptos-rs/cargo-leptos):
-  `cargo install --locked cargo-leptos`
+- [`cargo-leptos`](https://github.com/leptos-rs/cargo-leptos), pinned to the
+  version the build uses: `cargo install --locked --version 0.3.7 cargo-leptos`
 - **Bash** and **curl** (used by `scripts/smoke-test.sh`)
 
 ### Run locally
