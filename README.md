@@ -67,10 +67,15 @@ here.
   copy; the footer FAQ/Policies/LinkedIn links are placeholders.
 - **Deploy gate** polls the **Dokploy API** (`application.one` →
   `applicationStatus`), not the public `/version` through Cloudflare (Bot Fight
-  Mode challenges the CI request). **Not yet validated against a live Dokploy
-  response** — confirm the field name + `running`→`done` transition on the first
-  real deploy; if `application.deploy` returns a deployment id, poll
-  `deployment.all` instead.
+  Mode challenges the CI request). This is a deliberate **best-effort rollout
+  signal**: it confirms Dokploy finished the rollout but does NOT correlate to
+  this specific deploy/SHA. That's an accepted trade-off — the authoritative
+  proof that the built image serves the right commit on `:80` is the PR
+  **docker job**, which builds and runs this exact image and asserts `/version`.
+  **Not yet validated against a live Dokploy response** — confirm the field name
+  + `running`→`done` transition on the first real deploy; correlating to a
+  deployment id (`deployment.all`) or an origin-side `/version` SHA check (via
+  `--resolve`, bypassing Cloudflare) is the planned first-live-deploy hardening.
 - **CI split:** the PR verify job runs **fmt + clippy only** — the two clippy
   passes already compile both the `ssr` (native) and `hydrate` (wasm32) targets.
   The `cargo leptos build --release` + site assembly + a running-container smoke

@@ -131,8 +131,12 @@ jobs:
             -d "{\"applicationId\":\"${DOKPLOY_APPLICATION_ID}\"}" \
             "${DOKPLOY_URL%/}/api/application.deploy"
 
-      # Poll Dokploy directly — Cloudflare Bot Fight Mode blocks CI's /version poll.
-      # See README (Key decisions: Deploy gate); not yet validated against a live response.
+      # Best-effort rollout signal: poll Dokploy's applicationStatus (Cloudflare
+      # Bot Fight Mode blocks a CI /version poll). Deliberately NOT correlated to
+      # this specific deploy/SHA — the PR docker job is the authoritative proof
+      # the built image serves the right commit on :80; a deployment-id or
+      # origin-side /version check is the first-live-deploy hardening. Not yet
+      # validated against a live Dokploy response. See README (Key decisions).
       - name: Wait for Dokploy rollout to finish
         env:
           DOKPLOY_URL: ${{ vars.DOKPLOY_URL }}
@@ -162,16 +166,26 @@ jobs:
               sleep 10
               continue
             fi
-            fails=0
             echo "attempt ${attempt}: applicationStatus='${st}'"
+            # Contract is idle|running|done|error. Reset the failure counter only
+            # for a recognized state; an unknown value is treated like a request
+            # failure so a changed API shape can't silently spin to the timeout.
             case "${st}" in
-              running) seen_running=true ;;
-              error)   echo "Dokploy reports the deploy failed."; exit 1 ;;
+              running) seen_running=true; fails=0 ;;
+              idle)    fails=0 ;;
               done)
                 if [ "${seen_running}" = true ]; then
                   echo "Dokploy rollout complete."; exit 0
                 fi
-                # Likely the previous deploy's terminal state; keep waiting.
+                # 'done' before we ever saw 'running' is likely the previous
+                # deploy's terminal state; keep waiting for this rollout to start.
+                fails=0
+                ;;
+              error)   echo "Dokploy reports the deploy failed."; exit 1 ;;
+              *)
+                fails=$((fails + 1))
+                echo "attempt ${attempt}: unexpected applicationStatus '${st}' (${fails} in a row)"
+                [ "${fails}" -ge 3 ] && { echo "Unexpected Dokploy status '${st}' — the API contract may have changed."; exit 1; }
                 ;;
             esac
             sleep 10
