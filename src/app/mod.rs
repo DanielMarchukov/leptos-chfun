@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use leptos_meta::{provide_meta_context, Link, Meta, MetaTags, Stylesheet, Title};
+use leptos_meta::{provide_meta_context, HashedStylesheet, Link, Meta, MetaTags, Title};
 use leptos_router::{
     components::{Route, Router, Routes},
     StaticSegment,
@@ -53,6 +53,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                     type_="font/woff2"
                     crossorigin="anonymous"
                 />
+                <HashedStylesheet options=options.clone() id="leptos"/>
                 <AutoReload options=options.clone()/>
                 <HydrationScripts options/>
                 <MetaTags/>
@@ -71,7 +72,6 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
 pub fn App() -> impl IntoView {
     provide_meta_context();
     view! {
-        <Stylesheet id="leptos" href="/pkg/leptos-chfun.css"/>
         <Title text=SITE_TITLE/>
         <Meta name="description" content=SITE_DESCRIPTION/>
         <Meta property="og:title" content=SITE_TITLE/>
