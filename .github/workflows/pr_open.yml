@@ -100,8 +100,8 @@ jobs:
           html="$(curl -fsS http://localhost:8080/)"
           printf '%s' "$html" | grep -q "Chean Hui Toh"
           for ext in css js wasm; do
-            url="$(printf '%s' "$html" | grep -oE "/pkg/[A-Za-z0-9_.-]+\.${ext}" | head -1)"
-            test -n "$url" || { echo "no /pkg *.${ext} URL found in the HTML"; exit 1; }
+            url="$(printf '%s' "$html" | grep -oE "/pkg/leptos-chfun\.[A-Za-z0-9_-]+\.${ext}" | head -1)"
+            test -n "$url" || { echo "no content-hashed /pkg *.${ext} URL in HTML (hash-files regressed?)"; exit 1; }
             curl -fsS "http://localhost:8080${url}" -o /dev/null
             echo "  served ${url}"
           done
