@@ -1039,6 +1039,7 @@ dependencies = [
  "leptos_meta",
  "leptos_router",
  "percent-encoding",
+ "serde",
  "tokio",
  "tower",
  "tower-http",

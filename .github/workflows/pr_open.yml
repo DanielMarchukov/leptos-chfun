@@ -1,9 +1,7 @@
 name: PR Open
 
-# Runs on every PR targeting mainline AND on every direct push to mainline.
-# Responsibility: prove the change is formatted, passes clippy on BOTH the
-# server (ssr) and client (hydrate/wasm) sides, and produces a valid
-# cargo-leptos build. No deployment happens here.
+# Runs on PRs to mainline and pushes to mainline: fmt + clippy (ssr + hydrate)
+# + a Docker build/run smoke test. No deployment here. See README (CI split).
 
 on:
   pull_request:
@@ -49,34 +47,16 @@ jobs:
       - name: Check formatting
         run: cargo fmt --all -- --check
 
-      # Two clippy passes: the server (ssr, native) and the client
-      # (hydrate, wasm32). NEVER use `--all-features` on the wasm target — it
-      # enables `ssr`, which pulls in Tokio's `net` feature (mio), and mio does
-      # not compile for wasm ("This wasm target is unsupported by mio").
+      # ssr (native) + hydrate (wasm32). Never use --all-features on the wasm
+      # target — it pulls in ssr's Tokio/mio, which doesn't build for wasm.
       - name: Clippy (server / ssr, native)
         run: cargo clippy --features ssr -- -D warnings
 
       - name: Clippy (client / hydrate, wasm32)
         run: cargo clippy --lib --target wasm32-unknown-unknown --features hydrate -- -D warnings
 
-      - name: Install cargo-leptos
-        uses: taiki-e/install-action@v2
-        with:
-          tool: cargo-leptos@0.3.7
-
-      - name: Build (cargo-leptos, release)
-        run: cargo leptos build --release
-
-      # cargo-leptos emits the client bundle to target/site (the analog of the
-      # old Trunk dist/). The full SSR deployable is the Docker image built on
-      # tag in build-and-deploy.yml; this artifact is a build-output check.
-      - name: Upload site build
-        uses: actions/upload-artifact@v4
-        with:
-          name: site-${{ github.sha }}
-          path: target/site
-          retention-days: 7
-          if-no-files-found: error
+      # No cargo leptos build here — the two clippy passes already compile both
+      # targets; the Docker job does the full build + smoke test. See README (CI split).
 
   docker:
     name: Docker image build + run
@@ -118,8 +98,7 @@ jobs:
           test "$(curl -fsS http://localhost:8080/healthz)" = "ok"
           test "$(curl -fsS http://localhost:8080/version)" = "${EXPECTED_SHA}"
           curl -fsS http://localhost:8080/ | grep -q "Chean Hui Toh"
-          # The hydration assets must actually serve from the container's site
-          # root, or the page renders but can't hydrate.
+          # Hydration assets must serve from site root, or the page can't hydrate.
           curl -fsS http://localhost:8080/pkg/leptos-chfun.js   -o /dev/null
           curl -fsS http://localhost:8080/pkg/leptos-chfun.wasm -o /dev/null
           uid="$(docker exec lc-ci id -u)"
