@@ -43,6 +43,7 @@ codegen-units = 1
 output-name  = "leptos-chfun"
 site-root    = "target/site"
 site-pkg-dir = "pkg"
+hash-files = true
 tailwind-input-file = "style/tailwind.css"
 assets-dir   = "public"
 site-addr    = "127.0.0.1:3000"

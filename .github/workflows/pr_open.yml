@@ -97,10 +97,14 @@ jobs:
           done
           test "$(curl -fsS http://localhost:8080/healthz)" = "ok"
           test "$(curl -fsS http://localhost:8080/version)" = "${EXPECTED_SHA}"
-          curl -fsS http://localhost:8080/ | grep -q "Chean Hui Toh"
-          # Hydration assets must serve from site root, or the page can't hydrate.
-          curl -fsS http://localhost:8080/pkg/leptos-chfun.js   -o /dev/null
-          curl -fsS http://localhost:8080/pkg/leptos-chfun.wasm -o /dev/null
+          html="$(curl -fsS http://localhost:8080/)"
+          printf '%s' "$html" | grep -q "Chean Hui Toh"
+          for ext in css js wasm; do
+            url="$(printf '%s' "$html" | grep -oE "/pkg/[A-Za-z0-9_.-]+\.${ext}" | head -1)"
+            test -n "$url" || { echo "no /pkg *.${ext} URL found in the HTML"; exit 1; }
+            curl -fsS "http://localhost:8080${url}" -o /dev/null
+            echo "  served ${url}"
+          done
           uid="$(docker exec lc-ci id -u)"
           test "${uid}" != "0"
           echo "OK: healthy on :80, /version matches, non-root (uid=${uid})"

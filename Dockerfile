@@ -53,6 +53,7 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
     done \
     && mkdir -p /out \
     && cp target/release/leptos-chfun /out/server \
+    && cp target/release/hash.txt /out/hash.txt \
     && cp -r target/site /out/site
 
 # ----------------------------------------------------------------------
@@ -70,8 +71,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY --from=builder /out/server /app/server
-COPY --from=builder /out/site   /app/site
+COPY --from=builder /out/server   /app/server
+# hash.txt sits next to the binary; the runtime reads it to build hashed URLs.
+COPY --from=builder /out/hash.txt /app/hash.txt
+COPY --from=builder /out/site     /app/site
 
 # Non-root; setcap grants cap_net_bind_service so binding port 80 needs
 # neither root nor a port change.
@@ -82,6 +85,7 @@ RUN useradd --system --no-create-home --user-group --uid 10001 app \
 ENV LEPTOS_OUTPUT_NAME=leptos-chfun \
     LEPTOS_SITE_ROOT=site \
     LEPTOS_SITE_PKG_DIR=pkg \
+    LEPTOS_HASH_FILES=true \
     LEPTOS_SITE_ADDR=0.0.0.0:80
 
 # Port 80, matching the previous nginx image and existing Traefik routing.
