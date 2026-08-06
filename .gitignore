@@ -26,3 +26,9 @@ dist
 /plan.md
 /docs/
 /.superpowers/
+
+# understand-anything: commit the graph, ignore scratch/working files
+/.ua/intermediate/
+/.ua/tmp/
+/.ua/.trash-*/
+/.ua/diff-overlay.json
