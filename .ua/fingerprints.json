@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "gitCommitHash": "de37b22a0287f3ded88e8bce94de3362aeefbcad",
-  "generatedAt": "2026-08-02T21:24:58.662Z",
+  "gitCommitHash": "b39593c1612b3f93fa581c72644e7b808adef18f",
+  "generatedAt": "2026-08-06T07:47:04.676Z",
   "files": {
     ".coderabbit.yaml": {
       "filePath": ".coderabbit.yaml",
@@ -25,52 +25,52 @@
     },
     ".github/workflows/build-and-deploy.yml": {
       "filePath": ".github/workflows/build-and-deploy.yml",
-      "contentHash": "82c97a7385bd4235ce06b1455f98c76e596e3fd861dce000c1b1927a0328e514",
+      "contentHash": "565b152b56052aa2a5c59836594cc07b45f692001e895e4da1da910914a10903",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 197,
+      "totalLines": 208,
       "hasStructuralAnalysis": true
     },
     ".github/workflows/pr_open.yml": {
       "filePath": ".github/workflows/pr_open.yml",
-      "contentHash": "3e0ada8f76e4cc61fc8dbb02f0835e7f6b0da02b0e5158520c175fabee6bb589",
+      "contentHash": "f1901b6978b1b5f0e06339e3449cb04ab107ff5dcde41c5b3942ffb40471cbb3",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 108,
+      "totalLines": 112,
       "hasStructuralAnalysis": true
     },
     "Cargo.toml": {
       "filePath": "Cargo.toml",
-      "contentHash": "7e295bb14f5fba211c8cba125b8f46537996cd2b613f4b20611865c2d43b2a97",
+      "contentHash": "2c6e3a79f79244b688d8f09d46f4ba7da2f4ca37aadc0c9f4f790672eb298ba1",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 54,
+      "totalLines": 55,
       "hasStructuralAnalysis": true
     },
     "Dockerfile": {
       "filePath": "Dockerfile",
-      "contentHash": "629b5645869c67c3e2d767ddd2599a9a05d6ccfb2a6896545983a342e3b8c7e1",
+      "contentHash": "24a12766cc906f73b50048223bc823e551c31b0713a431872396d07f3634cb90",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 95,
+      "totalLines": 99,
       "hasStructuralAnalysis": true
     },
     "README.md": {
       "filePath": "README.md",
-      "contentHash": "7add7a74c86c502aeefa77b145f4c67141b671629bd0398322bbf286b6a9e2cd",
+      "contentHash": "24fbad130e775746067ce30002719ddcb46df6a3539dabc3d5f3bbecca4a9658",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 229,
+      "totalLines": 234,
       "hasStructuralAnalysis": true
     },
     "nginx.conf": {
@@ -378,7 +378,7 @@
     },
     "src/app/mod.rs": {
       "filePath": "src/app/mod.rs",
-      "contentHash": "7ce6fa0929aa7dd5eaa51907e1e2da59815f7d44bacd78a1b6af2e42073354e0",
+      "contentHash": "1933816644337da46303165d5b461b8a7c50b6c380e82cb062b270b8d3bec11c",
       "functions": [
         {
           "name": "shell",
@@ -387,14 +387,14 @@
           ],
           "returnType": "impl IntoView",
           "exported": true,
-          "lineCount": 31
+          "lineCount": 32
         },
         {
           "name": "App",
           "params": [],
           "returnType": "impl IntoView",
           "exported": true,
-          "lineCount": 16
+          "lineCount": 15
         },
         {
           "name": "HomePage",
@@ -416,10 +416,10 @@
           "source": "leptos_meta",
           "specifiers": [
             "provide_meta_context",
+            "HashedStylesheet",
             "Link",
             "Meta",
             "MetaTags",
-            "Stylesheet",
             "Title"
           ]
         },
@@ -476,12 +476,12 @@
         "shell",
         "App"
       ],
-      "totalLines": 100,
+      "totalLines": 104,
       "hasStructuralAnalysis": true
     },
     "src/app/nav.rs": {
       "filePath": "src/app/nav.rs",
-      "contentHash": "13d789bd46686a0edc2c7924fbdc19e42044cc5a18d2a36cfc1b39905393e67b",
+      "contentHash": "94c1f333174fc922c75a832dff50b44510c912401bf0d2321ecdd597e85be004",
       "functions": [
         {
           "name": "Nav",
@@ -511,7 +511,7 @@
       "exports": [
         "Nav"
       ],
-      "totalLines": 84,
+      "totalLines": 81,
       "hasStructuralAnalysis": true
     },
     "src/app/sections/about.rs": {
@@ -625,7 +625,7 @@
     },
     "src/app/sections/footer.rs": {
       "filePath": "src/app/sections/footer.rs",
-      "contentHash": "07d9fcbb548ab6a39065474d9983e45da719b3026cd1472c71bdf07fea1e1e80",
+      "contentHash": "50f07fdc3cdf8daca6d25941e3163c12317410d6062367c6d62f32826754203d",
       "functions": [
         {
           "name": "Footer",
@@ -647,14 +647,15 @@
           "source": "crate::app",
           "specifiers": [
             "IconInstagram",
-            "IconLinkedIn"
+            "IconLinkedIn",
+            "INSTAGRAM_URL"
           ]
         }
       ],
       "exports": [
         "Footer"
       ],
-      "totalLines": 75,
+      "totalLines": 72,
       "hasStructuralAnalysis": true
     },
     "src/app/sections/gallery.rs": {
@@ -719,7 +720,7 @@
     },
     "src/app/sections/instagram.rs": {
       "filePath": "src/app/sections/instagram.rs",
-      "contentHash": "00ea6ef32938f5ccc3eea90714f0334da465e84c20c587319915e9ff351141dc",
+      "contentHash": "77f85a6cfa6fc17043f79fdf709af3b11eb3b0889761d4e5d24114d4f8fcd375",
       "functions": [
         {
           "name": "get_feed",
@@ -763,7 +764,9 @@
         {
           "source": "crate::app",
           "specifiers": [
-            "IconInstagram"
+            "IconInstagram",
+            "INSTAGRAM_HANDLE",
+            "INSTAGRAM_URL"
           ]
         },
         {
@@ -778,7 +781,7 @@
         "get_feed",
         "InstagramSection"
       ],
-      "totalLines": 135,
+      "totalLines": 132,
       "hasStructuralAnalysis": true
     },
     "src/app/sections/mod.rs": {
