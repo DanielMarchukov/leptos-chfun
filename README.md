@@ -72,10 +72,10 @@ here.
   this specific deploy/SHA. That's an accepted trade-off — the authoritative
   proof that the built image serves the right commit on `:80` is the PR
   **docker job**, which builds and runs this exact image and asserts `/version`.
-  **Not yet validated against a live Dokploy response** — confirm the field name
-  + `running`→`done` transition on the first real deploy; correlating to a
-  deployment id (`deployment.all`) or an origin-side `/version` SHA check (via
-  `--resolve`, bypassing Cloudflare) is the planned first-live-deploy hardening.
+  **Validated on live deploys (v0.3.0, v0.3.1):** the `applicationStatus` field
+  and the `running`→`done` transition behave as documented and the gate exits
+  clean. Per-SHA correlation is verified out-of-band by an origin-side
+  `/version` SHA check (`curl --resolve`, bypassing Cloudflare).
 - **CI split:** the PR verify job runs **fmt + clippy only** — the two clippy
   passes already compile both the `ssr` (native) and `hydrate` (wasm32) targets.
   The `cargo leptos build --release` + site assembly + a running-container smoke

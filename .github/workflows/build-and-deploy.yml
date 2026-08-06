@@ -132,11 +132,11 @@ jobs:
             "${DOKPLOY_URL%/}/api/application.deploy"
 
       # Best-effort rollout signal: poll Dokploy's applicationStatus (Cloudflare
-      # Bot Fight Mode blocks a CI /version poll). Deliberately NOT correlated to
-      # this specific deploy/SHA — the PR docker job is the authoritative proof
-      # the built image serves the right commit on :80; a deployment-id or
-      # origin-side /version check is the first-live-deploy hardening. Not yet
-      # validated against a live Dokploy response. See README (Key decisions).
+      # Bot Fight Mode blocks a CI /version poll). NOT correlated to this specific
+      # deploy/SHA — the PR docker job is the authoritative proof the built image
+      # serves the right commit on :80. Validated on live deploys (v0.3.0,
+      # v0.3.1): the running->done transition and clean exit were observed.
+      # See README (Key decisions).
       - name: Wait for Dokploy rollout to finish
         env:
           DOKPLOY_URL: ${{ vars.DOKPLOY_URL }}

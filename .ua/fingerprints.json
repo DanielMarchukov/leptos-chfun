@@ -1,0 +1,1089 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "b39593c1612b3f93fa581c72644e7b808adef18f",
+  "generatedAt": "2026-08-06T07:47:04.676Z",
+  "files": {
+    ".coderabbit.yaml": {
+      "filePath": ".coderabbit.yaml",
+      "contentHash": "a2ded6bc6ff26ff46ff8c7147847afdb72642bf23665c2cc644872d3bdc8fff3",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 92,
+      "hasStructuralAnalysis": true
+    },
+    ".dockerignore": {
+      "filePath": ".dockerignore",
+      "contentHash": "e715ee9c048e26422c144efb8c54b1cd75dd2cf1a3a90563f97bb3f9b4dca878",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 34,
+      "hasStructuralAnalysis": false
+    },
+    ".github/workflows/build-and-deploy.yml": {
+      "filePath": ".github/workflows/build-and-deploy.yml",
+      "contentHash": "565b152b56052aa2a5c59836594cc07b45f692001e895e4da1da910914a10903",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 208,
+      "hasStructuralAnalysis": true
+    },
+    ".github/workflows/pr_open.yml": {
+      "filePath": ".github/workflows/pr_open.yml",
+      "contentHash": "f1901b6978b1b5f0e06339e3449cb04ab107ff5dcde41c5b3942ffb40471cbb3",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 112,
+      "hasStructuralAnalysis": true
+    },
+    "Cargo.toml": {
+      "filePath": "Cargo.toml",
+      "contentHash": "2c6e3a79f79244b688d8f09d46f4ba7da2f4ca37aadc0c9f4f790672eb298ba1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 55,
+      "hasStructuralAnalysis": true
+    },
+    "Dockerfile": {
+      "filePath": "Dockerfile",
+      "contentHash": "24a12766cc906f73b50048223bc823e551c31b0713a431872396d07f3634cb90",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 99,
+      "hasStructuralAnalysis": true
+    },
+    "README.md": {
+      "filePath": "README.md",
+      "contentHash": "24fbad130e775746067ce30002719ddcb46df6a3539dabc3d5f3bbecca4a9658",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 234,
+      "hasStructuralAnalysis": true
+    },
+    "nginx.conf": {
+      "filePath": "nginx.conf",
+      "contentHash": "6b4df09486990a3df359e0b34ca71e3abbafcb16eda3a0975099587978b95f92",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 115,
+      "hasStructuralAnalysis": false
+    },
+    "public/img/README.md": {
+      "filePath": "public/img/README.md",
+      "contentHash": "92a3fd6efba9752cc1d1b0dc2bf4e9d117dbedfd5ee6403aa6d048cc45a05b7d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 32,
+      "hasStructuralAnalysis": true
+    },
+    "rust-toolchain.toml": {
+      "filePath": "rust-toolchain.toml",
+      "contentHash": "045aa0b806e6faad4d96d385fd3825ec1186f58a7e20eca9f71be833fad12ca4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 4,
+      "hasStructuralAnalysis": true
+    },
+    "scripts/smoke-test.sh": {
+      "filePath": "scripts/smoke-test.sh",
+      "contentHash": "7bb6212032c3c4d83358f68f0aabf14b763ab8a0a3c47ec20d3dfec4f043a748",
+      "functions": [
+        {
+          "name": "log",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "cleanup",
+          "params": [],
+          "exported": false,
+          "lineCount": 14
+        },
+        {
+          "name": "record",
+          "params": [],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "assert_status",
+          "params": [],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "assert_body_contains",
+          "params": [],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "assert_body_equals",
+          "params": [],
+          "exported": false,
+          "lineCount": 12
+        }
+      ],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 150,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/components/eyebrow.rs": {
+      "filePath": "src/app/components/eyebrow.rs",
+      "contentHash": "906b4515a0a9561183ada535ed5172f4442c37674379b5202b6b51a6510331d9",
+      "functions": [
+        {
+          "name": "Eyebrow",
+          "params": [
+            "label",
+            "color_class"
+          ],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 18
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "Eyebrow"
+      ],
+      "totalLines": 25,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/components/info_card.rs": {
+      "filePath": "src/app/components/info_card.rs",
+      "contentHash": "512cb9871ed88817a616257c8295f96bb247ba3cb51db4cf5621f5b6967bb375",
+      "functions": [
+        {
+          "name": "class",
+          "params": [],
+          "returnType": "&'static str",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "InfoCard",
+          "params": [
+            "icon",
+            "title",
+            "fill",
+            "children"
+          ],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 27
+        }
+      ],
+      "classes": [
+        {
+          "name": "CardFill",
+          "methods": [
+            "class"
+          ],
+          "properties": [
+            "Blush",
+            "SageTint"
+          ],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "imports": [
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "CardFill",
+        "InfoCard"
+      ],
+      "totalLines": 56,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/components/mod.rs": {
+      "filePath": "src/app/components/mod.rs",
+      "contentHash": "dd22efd0ed64b077e0fd52d6a99a06e6100a4bc7a73a1c0dfd1e06d3b0a21eba",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "eyebrow",
+          "specifiers": [
+            "Eyebrow"
+          ]
+        },
+        {
+          "source": "info_card",
+          "specifiers": [
+            "CardFill",
+            "InfoCard"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 6,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/icons.rs": {
+      "filePath": "src/app/icons.rs",
+      "contentHash": "2d17711ebbd44c468240c2e518254a70dfe6914bf4bc9b647dec48b0c14a0cc5",
+      "functions": [
+        {
+          "name": "IconGraduationCap",
+          "params": [
+            "class"
+          ],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "IconAward",
+          "params": [
+            "class"
+          ],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "IconBriefcase",
+          "params": [
+            "class"
+          ],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "IconAmbulance",
+          "params": [
+            "class"
+          ],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "IconWind",
+          "params": [
+            "class"
+          ],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "IconInfinity",
+          "params": [
+            "class"
+          ],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "IconInstagram",
+          "params": [
+            "class"
+          ],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "IconLinkedIn",
+          "params": [
+            "class"
+          ],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "IconMenu",
+          "params": [
+            "class"
+          ],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "IconX",
+          "params": [
+            "class"
+          ],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 17
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "IconGraduationCap",
+        "IconAward",
+        "IconBriefcase",
+        "IconAmbulance",
+        "IconWind",
+        "IconInfinity",
+        "IconInstagram",
+        "IconLinkedIn",
+        "IconMenu",
+        "IconX"
+      ],
+      "totalLines": 233,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/mod.rs": {
+      "filePath": "src/app/mod.rs",
+      "contentHash": "1933816644337da46303165d5b461b8a7c50b6c380e82cb062b270b8d3bec11c",
+      "functions": [
+        {
+          "name": "shell",
+          "params": [
+            "options"
+          ],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 32
+        },
+        {
+          "name": "App",
+          "params": [],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "HomePage",
+          "params": [],
+          "returnType": "impl IntoView",
+          "exported": false,
+          "lineCount": 15
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "leptos_meta",
+          "specifiers": [
+            "provide_meta_context",
+            "HashedStylesheet",
+            "Link",
+            "Meta",
+            "MetaTags",
+            "Title"
+          ]
+        },
+        {
+          "source": "leptos_router",
+          "specifiers": [
+            "StaticSegment"
+          ]
+        },
+        {
+          "source": "components",
+          "specifiers": [
+            "CardFill",
+            "Eyebrow",
+            "InfoCard"
+          ]
+        },
+        {
+          "source": "icons",
+          "specifiers": [
+            "IconAmbulance",
+            "IconAward",
+            "IconBriefcase",
+            "IconGraduationCap",
+            "IconInfinity",
+            "IconInstagram",
+            "IconLinkedIn",
+            "IconMenu",
+            "IconWind",
+            "IconX"
+          ]
+        },
+        {
+          "source": "nav",
+          "specifiers": [
+            "Nav"
+          ]
+        },
+        {
+          "source": "sections",
+          "specifiers": [
+            "About",
+            "Approach",
+            "Credentials",
+            "Footer",
+            "Gallery",
+            "Hero",
+            "InstagramSection",
+            "Testimonial"
+          ]
+        }
+      ],
+      "exports": [
+        "shell",
+        "App"
+      ],
+      "totalLines": 104,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/nav.rs": {
+      "filePath": "src/app/nav.rs",
+      "contentHash": "94c1f333174fc922c75a832dff50b44510c912401bf0d2321ecdd597e85be004",
+      "functions": [
+        {
+          "name": "Nav",
+          "params": [],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 72
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate::app",
+          "specifiers": [
+            "IconInstagram",
+            "IconMenu",
+            "IconX"
+          ]
+        }
+      ],
+      "exports": [
+        "Nav"
+      ],
+      "totalLines": 81,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/sections/about.rs": {
+      "filePath": "src/app/sections/about.rs",
+      "contentHash": "7e3e3a32a728737fa64d9dbe0154a935b42906bc5c4c700725bedf2f31949c97",
+      "functions": [
+        {
+          "name": "About",
+          "params": [],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 32
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate::app",
+          "specifiers": [
+            "Eyebrow"
+          ]
+        }
+      ],
+      "exports": [
+        "About"
+      ],
+      "totalLines": 41,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/sections/approach.rs": {
+      "filePath": "src/app/sections/approach.rs",
+      "contentHash": "e1a811efc64d3dd0f5d413f4a5664523dea63fa54cfc341850717b910ec07e4a",
+      "functions": [
+        {
+          "name": "Approach",
+          "params": [],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 47
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate::app",
+          "specifiers": [
+            "CardFill",
+            "Eyebrow",
+            "IconAmbulance",
+            "IconInfinity",
+            "IconWind",
+            "InfoCard"
+          ]
+        }
+      ],
+      "exports": [
+        "Approach"
+      ],
+      "totalLines": 57,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/sections/credentials.rs": {
+      "filePath": "src/app/sections/credentials.rs",
+      "contentHash": "99bf4c8db829233ce7bf88a1c316ad3fd88370fa40ef5c014a3379960165bd4f",
+      "functions": [
+        {
+          "name": "Credentials",
+          "params": [],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 60
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate::app",
+          "specifiers": [
+            "CardFill",
+            "Eyebrow",
+            "IconAward",
+            "IconBriefcase",
+            "IconGraduationCap",
+            "InfoCard"
+          ]
+        }
+      ],
+      "exports": [
+        "Credentials"
+      ],
+      "totalLines": 69,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/sections/footer.rs": {
+      "filePath": "src/app/sections/footer.rs",
+      "contentHash": "50f07fdc3cdf8daca6d25941e3163c12317410d6062367c6d62f32826754203d",
+      "functions": [
+        {
+          "name": "Footer",
+          "params": [],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 62
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate::app",
+          "specifiers": [
+            "IconInstagram",
+            "IconLinkedIn",
+            "INSTAGRAM_URL"
+          ]
+        }
+      ],
+      "exports": [
+        "Footer"
+      ],
+      "totalLines": 72,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/sections/gallery.rs": {
+      "filePath": "src/app/sections/gallery.rs",
+      "contentHash": "0ef6436506ac05ae173acfd9811a78d2e531b7eee3022cd6b46ba6b1aaf2f70f",
+      "functions": [
+        {
+          "name": "Gallery",
+          "params": [],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 73
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate::app",
+          "specifiers": [
+            "Eyebrow"
+          ]
+        }
+      ],
+      "exports": [
+        "Gallery"
+      ],
+      "totalLines": 82,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/sections/hero.rs": {
+      "filePath": "src/app/sections/hero.rs",
+      "contentHash": "8cf548912c113e60f42aa4ac09a755af9e4b4b57cede7b86e16bef4956d37087",
+      "functions": [
+        {
+          "name": "Hero",
+          "params": [],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 33
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "Hero"
+      ],
+      "totalLines": 40,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/sections/instagram.rs": {
+      "filePath": "src/app/sections/instagram.rs",
+      "contentHash": "77f85a6cfa6fc17043f79fdf709af3b11eb3b0889761d4e5d24114d4f8fcd375",
+      "functions": [
+        {
+          "name": "get_feed",
+          "params": [],
+          "returnType": "Result<Vec<FeedItem>, ServerFnError>",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "InstagramSection",
+          "params": [],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 62
+        },
+        {
+          "name": "ig_tile",
+          "params": [
+            "item"
+          ],
+          "returnType": "impl IntoView",
+          "exported": false,
+          "lineCount": 25
+        },
+        {
+          "name": "IgFallbackGrid",
+          "params": [],
+          "returnType": "impl IntoView",
+          "exported": false,
+          "lineCount": 18
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate::app",
+          "specifiers": [
+            "IconInstagram",
+            "INSTAGRAM_HANDLE",
+            "INSTAGRAM_URL"
+          ]
+        },
+        {
+          "source": "crate::models",
+          "specifiers": [
+            "FeedItem",
+            "FeedKind"
+          ]
+        }
+      ],
+      "exports": [
+        "get_feed",
+        "InstagramSection"
+      ],
+      "totalLines": 132,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/sections/mod.rs": {
+      "filePath": "src/app/sections/mod.rs",
+      "contentHash": "ab881b9a8704e649f21e6d72a7e7df816eeea150628fc22d5384b54eaf8a3d66",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "about",
+          "specifiers": [
+            "About"
+          ]
+        },
+        {
+          "source": "approach",
+          "specifiers": [
+            "Approach"
+          ]
+        },
+        {
+          "source": "credentials",
+          "specifiers": [
+            "Credentials"
+          ]
+        },
+        {
+          "source": "footer",
+          "specifiers": [
+            "Footer"
+          ]
+        },
+        {
+          "source": "gallery",
+          "specifiers": [
+            "Gallery"
+          ]
+        },
+        {
+          "source": "hero",
+          "specifiers": [
+            "Hero"
+          ]
+        },
+        {
+          "source": "instagram",
+          "specifiers": [
+            "InstagramSection"
+          ]
+        },
+        {
+          "source": "testimonial",
+          "specifiers": [
+            "Testimonial"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 18,
+      "hasStructuralAnalysis": true
+    },
+    "src/app/sections/testimonial.rs": {
+      "filePath": "src/app/sections/testimonial.rs",
+      "contentHash": "f1981880ea7aa8efee6e3b93a9d66c6b2f7147d6e93ba44684a4ae49a480864c",
+      "functions": [
+        {
+          "name": "Testimonial",
+          "params": [],
+          "returnType": "impl IntoView",
+          "exported": true,
+          "lineCount": 21
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "Testimonial"
+      ],
+      "totalLines": 28,
+      "hasStructuralAnalysis": true
+    },
+    "src/lib.rs": {
+      "filePath": "src/lib.rs",
+      "contentHash": "8db1379a3b2f3e57cbb2cb057488d98e268d52680c56619d3112a718ef8baaea",
+      "functions": [
+        {
+          "name": "hydrate",
+          "params": [],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "classes": [],
+      "imports": [],
+      "exports": [
+        "hydrate"
+      ],
+      "totalLines": 12,
+      "hasStructuralAnalysis": true
+    },
+    "src/main.rs": {
+      "filePath": "src/main.rs",
+      "contentHash": "49080840bce5b10c78028d71da071dfd060239817a99180076bba822641716d6",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "returnType": "Result<(), Box<dyn std::error::Error>>",
+          "exported": false,
+          "lineCount": 26
+        },
+        {
+          "name": "main",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        }
+      ],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 32,
+      "hasStructuralAnalysis": true
+    },
+    "src/models.rs": {
+      "filePath": "src/models.rs",
+      "contentHash": "25bff180da47f8efe7b7908dbd118cb298276d68678c3b2fa30b310116fb4176",
+      "functions": [],
+      "classes": [
+        {
+          "name": "FeedItem",
+          "methods": [],
+          "properties": [
+            "id",
+            "kind",
+            "image_path",
+            "permalink",
+            "alt",
+            "timestamp"
+          ],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "FeedKind",
+          "methods": [],
+          "properties": [
+            "Photo",
+            "Reel"
+          ],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "imports": [
+        {
+          "source": "serde",
+          "specifiers": [
+            "Deserialize",
+            "Serialize"
+          ]
+        }
+      ],
+      "exports": [
+        "FeedItem",
+        "FeedKind"
+      ],
+      "totalLines": 33,
+      "hasStructuralAnalysis": true
+    },
+    "src/server/http.rs": {
+      "filePath": "src/server/http.rs",
+      "contentHash": "798526698bc9f72409158a02e55f81e0c8f3eb04cc3cbb35763106145d7ca3af",
+      "functions": [
+        {
+          "name": "status_routes",
+          "params": [],
+          "returnType": "Router<LeptosOptions>",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "healthz",
+          "params": [],
+          "returnType": "&'static str",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "version",
+          "params": [],
+          "returnType": "impl IntoResponse",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "apply_middleware",
+          "params": [
+            "router"
+          ],
+          "returnType": "Router<S>",
+          "exported": true,
+          "lineCount": 25
+        },
+        {
+          "name": "dotfile_guard",
+          "params": [
+            "req",
+            "next"
+          ],
+          "returnType": "Response",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "is_dotfile_blocked",
+          "params": [
+            "raw_path"
+          ],
+          "returnType": "bool",
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "cache_control",
+          "params": [
+            "req",
+            "next"
+          ],
+          "returnType": "Response",
+          "exported": false,
+          "lineCount": 22
+        },
+        {
+          "name": "cache_value_for",
+          "params": [
+            "is_pkg_asset",
+            "is_success",
+            "is_html"
+          ],
+          "returnType": "Option<&'static str>",
+          "exported": false,
+          "lineCount": 13
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "axum",
+          "specifiers": [
+            "extract::Request",
+            "routing::get",
+            "Router"
+          ]
+        },
+        {
+          "source": "leptos::prelude",
+          "specifiers": [
+            "LeptosOptions"
+          ]
+        },
+        {
+          "source": "tower_http",
+          "specifiers": [
+            "compression::CompressionLayer",
+            "set_header::SetResponseHeaderLayer"
+          ]
+        }
+      ],
+      "exports": [
+        "status_routes",
+        "apply_middleware"
+      ],
+      "totalLines": 203,
+      "hasStructuralAnalysis": true
+    },
+    "src/server/mod.rs": {
+      "filePath": "src/server/mod.rs",
+      "contentHash": "757ecf69003e5e05ed4bf9479bb6d3f2be9b9f1e915c0de2eb21236c8bf9ac94",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": true
+    },
+    "style/tailwind.css": {
+      "filePath": "style/tailwind.css",
+      "contentHash": "fc3c798c3f9c522da729e606943a67f72d3bb3f9bc3a0635a47e5c410472cc7c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 45,
+      "hasStructuralAnalysis": false
+    }
+  }
+}

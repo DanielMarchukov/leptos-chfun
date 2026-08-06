@@ -1,0 +1,2365 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "leptos-chfun",
+    "languages": [
+      "rust",
+      "css",
+      "toml",
+      "yaml",
+      "markdown",
+      "dockerfile",
+      "shell"
+    ],
+    "frameworks": [
+      "Leptos",
+      "axum",
+      "Tokio",
+      "serde",
+      "Tailwind CSS",
+      "Docker",
+      "GitHub Actions"
+    ],
+    "description": "Server-side-rendered Leptos personal-brand site (chpilates.fun) with client-side WASM hydration.",
+    "analyzedAt": "2026-08-06T07:41:08Z",
+    "gitCommitHash": "b39593c1612b3f93fa581c72644e7b808adef18f"
+  },
+  "nodes": [
+    {
+      "id": "file:src/app/icons.rs",
+      "type": "file",
+      "name": "icons.rs",
+      "filePath": "src/app/icons.rs",
+      "summary": "Library of ten reusable inline SVG icon components (graduation cap, award, briefcase, ambulance, wind, infinity, Instagram, LinkedIn, menu, close) each taking a `class` prop, consumed across the nav, sections, and footer.",
+      "tags": [
+        "component",
+        "ui",
+        "svg-icons",
+        "presentational"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Leptos #[component] fns returning inline SVG view! markup; each accepts a Tailwind class string for styling."
+    },
+    {
+      "id": "file:src/app/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src/app/mod.rs",
+      "summary": "App composition root: declares child modules, re-exports the public component/icon surface, defines shared site metadata consts (SITE_TITLE, INSTAGRAM_HANDLE, INSTAGRAM_URL), and builds the SSR `shell`, top-level `App` router, and `HomePage` that lays out every page section.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "routing",
+        "ssr",
+        "composition-root"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust module barrel combining `mod`/`pub use` re-exports with leptos_meta and leptos_router wiring for server-side rendering."
+    },
+    {
+      "id": "file:src/app/nav.rs",
+      "type": "file",
+      "name": "nav.rs",
+      "filePath": "src/app/nav.rs",
+      "summary": "Site navigation bar component with a reactive open/close signal driving a responsive mobile menu, using the menu, close, and Instagram icons.",
+      "tags": [
+        "component",
+        "navigation",
+        "event-handler",
+        "ui"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses Leptos `signal` reactivity to toggle mobile menu state."
+    },
+    {
+      "id": "file:src/app/sections/about.rs",
+      "type": "file",
+      "name": "about.rs",
+      "filePath": "src/app/sections/about.rs",
+      "summary": "About page section presenting the practitioner's introductory bio and positioning copy.",
+      "tags": [
+        "component",
+        "ui",
+        "content-section"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sections/approach.rs",
+      "type": "file",
+      "name": "approach.rs",
+      "filePath": "src/app/sections/approach.rs",
+      "summary": "Approach section describing the coaching methodology, illustrated with the ambulance, wind, and infinity icons.",
+      "tags": [
+        "component",
+        "ui",
+        "content-section"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/sections/credentials.rs",
+      "type": "file",
+      "name": "credentials.rs",
+      "filePath": "src/app/sections/credentials.rs",
+      "summary": "Credentials section highlighting qualifications and experience with graduation-cap, award, and briefcase icons.",
+      "tags": [
+        "component",
+        "ui",
+        "content-section"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/sections/footer.rs",
+      "type": "file",
+      "name": "footer.rs",
+      "filePath": "src/app/sections/footer.rs",
+      "summary": "Page footer with social links (Instagram, LinkedIn) and closing site information.",
+      "tags": [
+        "component",
+        "ui",
+        "footer"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/sections/gallery.rs",
+      "type": "file",
+      "name": "gallery.rs",
+      "filePath": "src/app/sections/gallery.rs",
+      "summary": "Image gallery section showcasing session and movement photography in a responsive grid layout.",
+      "tags": [
+        "component",
+        "ui",
+        "gallery"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/sections/hero.rs",
+      "type": "file",
+      "name": "hero.rs",
+      "filePath": "src/app/sections/hero.rs",
+      "summary": "Hero section rendering the landing headline, tagline, and primary call-to-action at the top of the home page.",
+      "tags": [
+        "component",
+        "ui",
+        "hero"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sections/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src/app/sections/mod.rs",
+      "summary": "Sections module barrel that declares and re-exports every home-page section component (about, approach, credentials, footer, gallery, hero, instagram, testimonial).",
+      "tags": [
+        "barrel",
+        "module",
+        "re-exports"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust module barrel of `mod`/`pub use` statements aggregating the section components."
+    },
+    {
+      "id": "file:src/app/sections/testimonial.rs",
+      "type": "file",
+      "name": "testimonial.rs",
+      "filePath": "src/app/sections/testimonial.rs",
+      "summary": "Testimonial section displaying a client quote and attribution.",
+      "tags": [
+        "component",
+        "ui",
+        "testimonial"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/icons.rs:IconGraduationCap",
+      "type": "function",
+      "name": "IconGraduationCap",
+      "filePath": "src/app/icons.rs",
+      "lineRange": [
+        10,
+        29
+      ],
+      "summary": "Inline SVG graduation-cap icon component accepting a Tailwind `class` prop.",
+      "tags": [
+        "component",
+        "svg-icons",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/icons.rs:IconAward",
+      "type": "function",
+      "name": "IconAward",
+      "filePath": "src/app/icons.rs",
+      "lineRange": [
+        34,
+        50
+      ],
+      "summary": "Inline SVG award icon component accepting a Tailwind `class` prop.",
+      "tags": [
+        "component",
+        "svg-icons",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/icons.rs:IconBriefcase",
+      "type": "function",
+      "name": "IconBriefcase",
+      "filePath": "src/app/icons.rs",
+      "lineRange": [
+        55,
+        73
+      ],
+      "summary": "Inline SVG briefcase icon component accepting a Tailwind `class` prop.",
+      "tags": [
+        "component",
+        "svg-icons",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/icons.rs:IconAmbulance",
+      "type": "function",
+      "name": "IconAmbulance",
+      "filePath": "src/app/icons.rs",
+      "lineRange": [
+        78,
+        101
+      ],
+      "summary": "Inline SVG ambulance icon component accepting a Tailwind `class` prop.",
+      "tags": [
+        "component",
+        "svg-icons",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/icons.rs:IconWind",
+      "type": "function",
+      "name": "IconWind",
+      "filePath": "src/app/icons.rs",
+      "lineRange": [
+        106,
+        123
+      ],
+      "summary": "Inline SVG wind icon component accepting a Tailwind `class` prop.",
+      "tags": [
+        "component",
+        "svg-icons",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/icons.rs:IconInfinity",
+      "type": "function",
+      "name": "IconInfinity",
+      "filePath": "src/app/icons.rs",
+      "lineRange": [
+        128,
+        143
+      ],
+      "summary": "Inline SVG infinity icon component accepting a Tailwind `class` prop.",
+      "tags": [
+        "component",
+        "svg-icons",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/icons.rs:IconInstagram",
+      "type": "function",
+      "name": "IconInstagram",
+      "filePath": "src/app/icons.rs",
+      "lineRange": [
+        148,
+        167
+      ],
+      "summary": "Inline SVG Instagram glyph icon component accepting a Tailwind `class` prop, used in the nav and footer social links.",
+      "tags": [
+        "component",
+        "svg-icons",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/icons.rs:IconLinkedIn",
+      "type": "function",
+      "name": "IconLinkedIn",
+      "filePath": "src/app/icons.rs",
+      "lineRange": [
+        172,
+        189
+      ],
+      "summary": "Inline SVG LinkedIn glyph icon component accepting a Tailwind `class` prop, used in the footer social links.",
+      "tags": [
+        "component",
+        "svg-icons",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/icons.rs:IconMenu",
+      "type": "function",
+      "name": "IconMenu",
+      "filePath": "src/app/icons.rs",
+      "lineRange": [
+        194,
+        211
+      ],
+      "summary": "Inline SVG hamburger-menu icon component accepting a Tailwind `class` prop, used to open the mobile nav.",
+      "tags": [
+        "component",
+        "svg-icons",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/icons.rs:IconX",
+      "type": "function",
+      "name": "IconX",
+      "filePath": "src/app/icons.rs",
+      "lineRange": [
+        216,
+        232
+      ],
+      "summary": "Inline SVG close (X) icon component accepting a Tailwind `class` prop, used to dismiss the mobile nav.",
+      "tags": [
+        "component",
+        "svg-icons",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/mod.rs:shell",
+      "type": "function",
+      "name": "shell",
+      "filePath": "src/app/mod.rs",
+      "lineRange": [
+        35,
+        66
+      ],
+      "summary": "Builds the full HTML document shell for server-side rendering, wiring font preloads, hashed stylesheet, hydration scripts, and meta tags around the App root.",
+      "tags": [
+        "ssr",
+        "entry-point",
+        "component"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Returns `impl IntoView` with a full <!DOCTYPE html> tree for Leptos SSR."
+    },
+    {
+      "id": "function:src/app/mod.rs:App",
+      "type": "function",
+      "name": "App",
+      "filePath": "src/app/mod.rs",
+      "lineRange": [
+        72,
+        86
+      ],
+      "summary": "Top-level application component that provides meta context, sets Title/OG meta tags, and mounts the Router with a single home-page route.",
+      "tags": [
+        "entry-point",
+        "routing",
+        "component"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/mod.rs:HomePage",
+      "type": "function",
+      "name": "HomePage",
+      "filePath": "src/app/mod.rs",
+      "lineRange": [
+        89,
+        103
+      ],
+      "summary": "Home page layout component that composes the nav and every content section (Hero, About, Credentials, Approach, Gallery, Testimonial, Instagram) plus the footer.",
+      "tags": [
+        "component",
+        "composition-root",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/nav.rs:Nav",
+      "type": "function",
+      "name": "Nav",
+      "filePath": "src/app/nav.rs",
+      "lineRange": [
+        9,
+        80
+      ],
+      "summary": "Navigation bar component managing a reactive open/close signal for the responsive mobile menu and rendering menu, close, and Instagram icons.",
+      "tags": [
+        "component",
+        "navigation",
+        "event-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sections/about.rs:About",
+      "type": "function",
+      "name": "About",
+      "filePath": "src/app/sections/about.rs",
+      "lineRange": [
+        9,
+        40
+      ],
+      "summary": "About section component rendering the practitioner bio and positioning copy.",
+      "tags": [
+        "component",
+        "ui",
+        "content-section"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/sections/approach.rs:Approach",
+      "type": "function",
+      "name": "Approach",
+      "filePath": "src/app/sections/approach.rs",
+      "lineRange": [
+        10,
+        56
+      ],
+      "summary": "Approach section component outlining the coaching methodology, illustrated with ambulance, wind, and infinity icons.",
+      "tags": [
+        "component",
+        "ui",
+        "content-section"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sections/credentials.rs:Credentials",
+      "type": "function",
+      "name": "Credentials",
+      "filePath": "src/app/sections/credentials.rs",
+      "lineRange": [
+        9,
+        68
+      ],
+      "summary": "Credentials section component listing qualifications and experience with graduation-cap, award, and briefcase icons.",
+      "tags": [
+        "component",
+        "ui",
+        "content-section"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sections/footer.rs:Footer",
+      "type": "function",
+      "name": "Footer",
+      "filePath": "src/app/sections/footer.rs",
+      "lineRange": [
+        10,
+        71
+      ],
+      "summary": "Footer component rendering closing site information and Instagram/LinkedIn social links.",
+      "tags": [
+        "component",
+        "ui",
+        "footer"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sections/gallery.rs:Gallery",
+      "type": "function",
+      "name": "Gallery",
+      "filePath": "src/app/sections/gallery.rs",
+      "lineRange": [
+        9,
+        81
+      ],
+      "summary": "Gallery section component displaying session/movement photography in a responsive grid.",
+      "tags": [
+        "component",
+        "ui",
+        "gallery"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sections/hero.rs:Hero",
+      "type": "function",
+      "name": "Hero",
+      "filePath": "src/app/sections/hero.rs",
+      "lineRange": [
+        7,
+        39
+      ],
+      "summary": "Hero section component rendering the landing headline, tagline, and primary call-to-action.",
+      "tags": [
+        "component",
+        "ui",
+        "hero"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/sections/testimonial.rs:Testimonial",
+      "type": "function",
+      "name": "Testimonial",
+      "filePath": "src/app/sections/testimonial.rs",
+      "lineRange": [
+        7,
+        27
+      ],
+      "summary": "Testimonial section component displaying a client quote and attribution.",
+      "tags": [
+        "component",
+        "ui",
+        "testimonial"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sections/instagram.rs",
+      "type": "file",
+      "name": "instagram.rs",
+      "filePath": "src/app/sections/instagram.rs",
+      "summary": "Instagram \"Follow the Flow\" section: a Leptos #[server] function (get_feed, a Phase-4 stub returning []) feeds a Resource/Suspense-driven tile grid that falls back to a static six-tile placeholder.",
+      "tags": [
+        "component",
+        "server-fn",
+        "ssr",
+        "ui-section",
+        "instagram"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src/lib.rs",
+      "summary": "WASM hydration entry point (crate root) exposing the wasm-bindgen `hydrate` function that installs a panic hook and hydrates the Leptos App in the browser.",
+      "tags": [
+        "entry-point",
+        "hydration",
+        "wasm",
+        "client"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Crate root gated for the hydrate build; the browser calls the wasm-bindgen entry point to attach the SSR-rendered markup."
+    },
+    {
+      "id": "file:src/models.rs",
+      "type": "file",
+      "name": "models.rs",
+      "filePath": "src/models.rs",
+      "summary": "Shared data models (FeedItem, FeedKind) for the Instagram feed, compiled into both the ssr and hydrate builds so the server function's types resolve on both sides.",
+      "tags": [
+        "data-model",
+        "type-definition",
+        "shared",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/server/http.rs",
+      "type": "file",
+      "name": "http.rs",
+      "filePath": "src/server/http.rs",
+      "summary": "Tower/axum HTTP layer providing status routes (/healthz, /version) and nginx-parity middleware: security headers, gzip compression, two-tier cache-control, and a percent-decoding dotfile guard.",
+      "tags": [
+        "middleware",
+        "service",
+        "security",
+        "http",
+        "caching"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Splits pure decision functions (is_dotfile_blocked, cache_value_for) out of the async middleware so they can be unit-tested in an inline #[cfg(test)] module."
+    },
+    {
+      "id": "file:src/server/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src/server/mod.rs",
+      "summary": "Server module barrel exposing the http submodule (status routes and middleware) to the rest of the crate.",
+      "tags": [
+        "barrel",
+        "module",
+        "server"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/sections/instagram.rs:get_feed",
+      "type": "function",
+      "name": "get_feed",
+      "filePath": "src/app/sections/instagram.rs",
+      "lineRange": [
+        11,
+        13
+      ],
+      "summary": "Leptos #[server] function that will fetch the cached Instagram feed; a Phase-4 stub currently returning an empty vector so the static fallback always shows.",
+      "tags": [
+        "server-fn",
+        "async",
+        "stub",
+        "data-fetching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/sections/instagram.rs:InstagramSection",
+      "type": "function",
+      "name": "InstagramSection",
+      "filePath": "src/app/sections/instagram.rs",
+      "lineRange": [
+        19,
+        80
+      ],
+      "summary": "Leptos component rendering the \"Follow the Flow\" Instagram section, driving a Resource+Suspense tile grid with a static fallback and follow links.",
+      "tags": [
+        "component",
+        "ui-section",
+        "suspense",
+        "instagram"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sections/instagram.rs:ig_tile",
+      "type": "function",
+      "name": "ig_tile",
+      "filePath": "src/app/sections/instagram.rs",
+      "lineRange": [
+        84,
+        108
+      ],
+      "summary": "Renders a single feed tile as an image linking to its permalink, overlaying a play glyph for reels.",
+      "tags": [
+        "component",
+        "render-helper",
+        "instagram"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/sections/instagram.rs:IgFallbackGrid",
+      "type": "function",
+      "name": "IgFallbackGrid",
+      "filePath": "src/app/sections/instagram.rs",
+      "lineRange": [
+        114,
+        131
+      ],
+      "summary": "Static six-tile placeholder grid shown while the feed is pending or empty, alternating sage/blush backgrounds with a muted Instagram icon.",
+      "tags": [
+        "component",
+        "fallback",
+        "ui-section"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib.rs:hydrate",
+      "type": "function",
+      "name": "hydrate",
+      "filePath": "src/lib.rs",
+      "lineRange": [
+        8,
+        11
+      ],
+      "summary": "wasm-bindgen entry point that installs the console error panic hook and hydrates the Leptos App body on the client.",
+      "tags": [
+        "entry-point",
+        "hydration",
+        "wasm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/models.rs:FeedItem",
+      "type": "class",
+      "name": "FeedItem",
+      "filePath": "src/models.rs",
+      "lineRange": [
+        10,
+        23
+      ],
+      "summary": "Struct describing one Instagram feed entry (id, kind, image_path, permalink, alt, timestamp), shared across the ssr and hydrate builds.",
+      "tags": [
+        "data-model",
+        "struct",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/models.rs:FeedKind",
+      "type": "class",
+      "name": "FeedKind",
+      "filePath": "src/models.rs",
+      "lineRange": [
+        27,
+        32
+      ],
+      "summary": "Enum distinguishing a feed item as a Photo or Reel, driving the reel play-glyph overlay in the tile renderer.",
+      "tags": [
+        "data-model",
+        "enum",
+        "type-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/server/http.rs:status_routes",
+      "type": "function",
+      "name": "status_routes",
+      "filePath": "src/server/http.rs",
+      "lineRange": [
+        14,
+        18
+      ],
+      "summary": "Builds an axum Router exposing /healthz (liveness) and /version (build GIT_SHA), which the deploy pipeline polls for an exact commit match.",
+      "tags": [
+        "service",
+        "routing",
+        "health-check"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/server/http.rs:version",
+      "type": "function",
+      "name": "version",
+      "filePath": "src/server/http.rs",
+      "lineRange": [
+        24,
+        33
+      ],
+      "summary": "Handler returning the build's compile-time GIT_SHA as no-cache plain text for deploy verification.",
+      "tags": [
+        "handler",
+        "deployment",
+        "http"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/server/http.rs:apply_middleware",
+      "type": "function",
+      "name": "apply_middleware",
+      "filePath": "src/server/http.rs",
+      "lineRange": [
+        37,
+        61
+      ],
+      "summary": "Wraps a router with the full nginx-parity middleware stack: cache-control, dotfile guard, gzip compression, and security response headers.",
+      "tags": [
+        "middleware",
+        "security",
+        "http"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/server/http.rs:cache_control",
+      "type": "function",
+      "name": "cache_control",
+      "filePath": "src/server/http.rs",
+      "lineRange": [
+        86,
+        107
+      ],
+      "summary": "Async middleware assigning two-tier Cache-Control (immutable for /pkg/ assets, no-store for HTML) while leaving responses that set their own value untouched.",
+      "tags": [
+        "middleware",
+        "caching",
+        "http"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/server/http.rs:cache_value_for",
+      "type": "function",
+      "name": "cache_value_for",
+      "filePath": "src/server/http.rs",
+      "lineRange": [
+        111,
+        123
+      ],
+      "summary": "Pure const decision function selecting the Cache-Control value for a given pkg-asset/success/HTML combination; unit-tested in isolation.",
+      "tags": [
+        "validation",
+        "caching",
+        "pure-function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/server/http.rs:is_dotfile_blocked",
+      "type": "function",
+      "name": "is_dotfile_blocked",
+      "filePath": "src/server/http.rs",
+      "lineRange": [
+        75,
+        81
+      ],
+      "summary": "Pure decision function that percent-decodes a path and blocks dot-prefixed segments (e.g. /.env) while allowing /.well-known/, mirroring nginx.",
+      "tags": [
+        "security",
+        "validation",
+        "pure-function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/components/eyebrow.rs",
+      "type": "file",
+      "name": "eyebrow.rs",
+      "filePath": "src/app/components/eyebrow.rs",
+      "summary": "Defines the `Eyebrow` Leptos component \u2014 a dash-plus-uppercase-label heading shown above section titles, with a configurable Tailwind text-color utility.",
+      "tags": [
+        "component",
+        "ui-primitive",
+        "leptos",
+        "heading"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Uses Leptos `#[component]` macro with `#[prop(into)]` and a default-valued `color_class` prop; the color class must be a literal so Tailwind's scanner can see it."
+    },
+    {
+      "id": "function:src/app/components/eyebrow.rs:Eyebrow",
+      "type": "function",
+      "name": "Eyebrow",
+      "filePath": "src/app/components/eyebrow.rs",
+      "lineRange": [
+        7,
+        24
+      ],
+      "summary": "Leptos component rendering a short horizontal dash followed by an uppercase, letter-spaced label; accepts the label text and a Tailwind text-color utility class.",
+      "tags": [
+        "component",
+        "ui-primitive",
+        "leptos"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/components/info_card.rs",
+      "type": "file",
+      "name": "info_card.rs",
+      "filePath": "src/app/components/info_card.rs",
+      "summary": "Defines the canonical filled `InfoCard` Leptos component and its `CardFill` tint enum, used for the Credentials and Approach cards with an icon chip, title, and children body slot.",
+      "tags": [
+        "component",
+        "ui-primitive",
+        "leptos",
+        "data-model"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "A `CardFill` enum with a `const fn class(self)` mapper replaces a stringly-typed fill prop so call sites cannot typo a background class."
+    },
+    {
+      "id": "class:src/app/components/info_card.rs:CardFill",
+      "type": "class",
+      "name": "CardFill",
+      "filePath": "src/app/components/info_card.rs",
+      "lineRange": [
+        6,
+        11
+      ],
+      "summary": "Enum of soft card background tints (Blush, SageTint) with a `class` method mapping each variant to its Tailwind background utility, preventing stringly-typed fill typos at call sites.",
+      "tags": [
+        "data-model",
+        "enum",
+        "type-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/components/info_card.rs:InfoCard",
+      "type": "function",
+      "name": "InfoCard",
+      "filePath": "src/app/components/info_card.rs",
+      "lineRange": [
+        29,
+        55
+      ],
+      "summary": "Leptos component rendering the canonical filled info card \u2014 a 64px white icon chip, Fraunces title, and a children body slot \u2014 styled by the chosen CardFill tint.",
+      "tags": [
+        "component",
+        "ui-primitive",
+        "leptos"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/components/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src/app/components/mod.rs",
+      "summary": "Barrel module for the shared UI primitives, re-exporting `Eyebrow`, `InfoCard`, and `CardFill` for the rest of the app.",
+      "tags": [
+        "barrel",
+        "entry-point",
+        "module"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:Dockerfile",
+      "type": "service",
+      "name": "Dockerfile",
+      "filePath": "Dockerfile",
+      "summary": "Two-stage cargo-leptos build: a rust:slim builder compiles the axum SSR server plus hydration WASM and site assets, then copies the outputs into a minimal debian:bookworm-slim runtime that runs as non-root uid 10001 and binds port 80 via setcap.",
+      "tags": [
+        "containerization",
+        "infrastructure",
+        "deployment",
+        "multi-stage",
+        "leptos"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Multi-stage build with shared DEBIAN_VERSION arg to keep glibc consistent; BuildKit cache mounts speed cargo/registry reuse and a retry loop absorbs transient network failures during cargo leptos build."
+    },
+    {
+      "id": "service:Dockerfile:builder",
+      "type": "service",
+      "name": "builder",
+      "summary": "Build stage on rust:slim that installs binaryen and OpenSSL toolchain, adds the wasm32 target, installs cargo-leptos 0.3.7, and builds the release server binary, hash.txt, and site assets into /out with a retrying cargo leptos build.",
+      "tags": [
+        "containerization",
+        "build-system",
+        "rust",
+        "cargo-leptos"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "service:Dockerfile:runtime",
+      "type": "service",
+      "name": "runtime",
+      "summary": "Runtime stage on debian:bookworm-slim that installs ca-certificates, wget, and libcap2-bin, copies the server binary, hash.txt, and site assets from the builder, creates a non-root uid 10001 user, grants cap_net_bind_service, sets Leptos env vars, exposes port 80, and defines a /healthz healthcheck.",
+      "tags": [
+        "containerization",
+        "deployment",
+        "runtime",
+        "security",
+        "healthcheck"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:.dockerignore",
+      "type": "config",
+      "name": ".dockerignore",
+      "filePath": ".dockerignore",
+      "summary": "Docker build-context exclusion list that keeps build outputs, VCS metadata, CI/docs/editor files, local env secrets, and planning scaffolding out of the image to shrink context and prevent unreviewed or sensitive files from landing in the site root.",
+      "tags": [
+        "configuration",
+        "containerization",
+        "security",
+        "build-system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "pipeline:.github/workflows/build-and-deploy.yml",
+      "type": "pipeline",
+      "name": "build-and-deploy.yml",
+      "filePath": ".github/workflows/build-and-deploy.yml",
+      "summary": "Tag-triggered release pipeline that builds the Docker image, pushes it to GHCR, triggers a Dokploy deploy, polls the rollout to completion, then purges the Cloudflare edge cache.",
+      "tags": [
+        "ci-cd",
+        "deployment",
+        "containerization",
+        "infrastructure"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Least-privilege GitHub Actions setup: read-only default permissions with packages:write scoped to the build job only, a 'release-production' concurrency group to serialize deploys, and a bash polling loop guarding the Dokploy rollout against contract drift."
+    },
+    {
+      "id": "pipeline:.github/workflows/pr_open.yml",
+      "type": "pipeline",
+      "name": "pr_open.yml",
+      "filePath": ".github/workflows/pr_open.yml",
+      "summary": "PR and mainline-push CI workflow running cargo fmt plus two-sided clippy (ssr and hydrate) and a Docker build-and-run smoke test asserting health, /version SHA, non-root user, and hashed asset serving on port 80.",
+      "tags": [
+        "ci-cd",
+        "test",
+        "build-system",
+        "containerization"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Runs clippy against both the native ssr and wasm32 hydrate feature sets because the Leptos app compiles to two targets; the docker job build-and-runs the deploy image as the authoritative smoke test."
+    },
+    {
+      "id": "config:.coderabbit.yaml",
+      "type": "config",
+      "name": ".coderabbit.yaml",
+      "filePath": ".coderabbit.yaml",
+      "summary": "CodeRabbit AI code-review configuration defining review tone, auto-review behavior, chat, and knowledge-base settings applied to pull requests.",
+      "tags": [
+        "configuration",
+        "ci-cd",
+        "code-review",
+        "automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "Cargo.toml",
+      "summary": "Crate manifest for the leptos-chfun site declaring the split cdylib+rlib crate, the ssr/hydrate feature sets, dependencies, lint/release profiles, and the [package.metadata.leptos] build configuration with hash-files cache-busting.",
+      "tags": [
+        "configuration",
+        "build-system",
+        "rust",
+        "dependencies",
+        "leptos"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Split cdylib+rlib crate: the ssr feature powers the Axum server binary while the hydrate feature builds the WASM client; hash-files=true fingerprints assets for cache-busting."
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Project knowledge base for chpilates.fun covering features, key decisions and conventions, design/section notes, architecture, and local development workflows.",
+      "tags": [
+        "documentation",
+        "entry-point",
+        "overview",
+        "architecture"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:rust-toolchain.toml",
+      "type": "config",
+      "name": "rust-toolchain.toml",
+      "filePath": "rust-toolchain.toml",
+      "summary": "Pins the Rust toolchain channel and components used to build the project, ensuring reproducible builds across local and CI environments.",
+      "tags": [
+        "configuration",
+        "rust",
+        "build-system",
+        "toolchain"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:nginx.conf",
+      "type": "file",
+      "name": "nginx.conf",
+      "filePath": "nginx.conf",
+      "summary": "Legacy/vendored nginx server config for a static-asset container \u2014 security headers, gzip, immutable caching of Trunk content-hashed assets, /healthz and /version endpoints, dotfile guard, and SPA fallback. Retired in favor of tower-http serving from the Leptos/axum server; kept only for reference.",
+      "tags": [
+        "web-server",
+        "configuration",
+        "legacy",
+        "caching",
+        "security-headers"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Relies on nginx add_header merge inheritance (1.29.3+) so location-level headers append rather than replace the server-scope security headers; deliberately omits a types block to avoid clobbering inherited mime.types."
+    },
+    {
+      "id": "document:public/img/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "public/img/README.md",
+      "summary": "Image drop-in manifest documenting where and how to add image assets under public/img/, including a section clarifying which paths are not auto-served drop-in slots.",
+      "tags": [
+        "documentation",
+        "assets",
+        "images",
+        "manifest"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/smoke-test.sh",
+      "type": "file",
+      "name": "smoke-test.sh",
+      "filePath": "scripts/smoke-test.sh",
+      "summary": "Container smoke test that boots the built image and probes HTTP endpoints, asserting status codes and response bodies to verify the deployed server responds correctly.",
+      "tags": [
+        "test",
+        "smoke-test",
+        "shell",
+        "ci-cd",
+        "http"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/main.rs",
+      "type": "file",
+      "name": "main.rs",
+      "filePath": "src/main.rs",
+      "summary": "SSR server entry point that wires axum and leptos_axum together \u2014 loads Leptos configuration, mounts status routes and Leptos SSR routes, applies middleware, and serves over TCP. A no-op main compiles for the non-SSR (WASM hydration) target.",
+      "tags": [
+        "entry-point",
+        "server",
+        "ssr",
+        "axum",
+        "bootstrap"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Uses cfg(feature = \"ssr\") to gate the tokio async server entry, with a stub fn main() for the wasm/hydrate build so the same crate compiles for both targets."
+    },
+    {
+      "id": "file:style/tailwind.css",
+      "type": "file",
+      "name": "tailwind.css",
+      "filePath": "style/tailwind.css",
+      "summary": "Tailwind v4 stylesheet defining the site's design tokens via @theme (color palette plus display/sans font families) and self-hosted variable @font-face declarations for Fraunces and Geist.",
+      "tags": [
+        "styling",
+        "design-tokens",
+        "theme",
+        "fonts",
+        "tailwind"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Tailwind v4 @theme block declares design tokens as CSS custom properties; single variable woff2 files cover the full 100\u2013900 weight range per family."
+    },
+    {
+      "id": "function:scripts/smoke-test.sh:cleanup",
+      "type": "function",
+      "name": "cleanup",
+      "filePath": "scripts/smoke-test.sh",
+      "lineRange": [
+        29,
+        42
+      ],
+      "summary": "Trap handler that tears down the smoke-test run \u2014 stops and removes the container and cleans up temporary artifacts on exit.",
+      "tags": [
+        "cleanup",
+        "teardown",
+        "test-harness"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/smoke-test.sh:assert_status",
+      "type": "function",
+      "name": "assert_status",
+      "filePath": "scripts/smoke-test.sh",
+      "lineRange": [
+        55,
+        64
+      ],
+      "summary": "Asserts that an HTTP request to a given path returns the expected status code, recording a pass/fail result.",
+      "tags": [
+        "assertion",
+        "http",
+        "test-harness"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/smoke-test.sh:assert_body_contains",
+      "type": "function",
+      "name": "assert_body_contains",
+      "filePath": "scripts/smoke-test.sh",
+      "lineRange": [
+        66,
+        75
+      ],
+      "summary": "Asserts that an HTTP response body for a path contains an expected substring, recording the outcome.",
+      "tags": [
+        "assertion",
+        "http",
+        "test-harness"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/smoke-test.sh:assert_body_equals",
+      "type": "function",
+      "name": "assert_body_equals",
+      "filePath": "scripts/smoke-test.sh",
+      "lineRange": [
+        77,
+        88
+      ],
+      "summary": "Asserts that an HTTP response body for a path exactly equals the expected string, recording the outcome.",
+      "tags": [
+        "assertion",
+        "http",
+        "test-harness"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/main.rs:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "src/main.rs",
+      "lineRange": [
+        3,
+        28
+      ],
+      "summary": "Async SSR entry that loads Leptos configuration, builds the axum Router with status and Leptos routes plus a file/error fallback, applies middleware, and serves the app over a bound TCP listener.",
+      "tags": [
+        "entry-point",
+        "server",
+        "axum",
+        "bootstrap"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconGraduationCap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconAward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconBriefcase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconAmbulance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconWind",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconInfinity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconInstagram",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconLinkedIn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconMenu",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconX",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/mod.rs",
+      "target": "function:src/app/mod.rs:shell",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/mod.rs",
+      "target": "function:src/app/mod.rs:App",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/mod.rs",
+      "target": "function:src/app/mod.rs:HomePage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/nav.rs",
+      "target": "function:src/app/nav.rs:Nav",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sections/about.rs",
+      "target": "function:src/app/sections/about.rs:About",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sections/approach.rs",
+      "target": "function:src/app/sections/approach.rs:Approach",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sections/credentials.rs",
+      "target": "function:src/app/sections/credentials.rs:Credentials",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sections/footer.rs",
+      "target": "function:src/app/sections/footer.rs:Footer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sections/gallery.rs",
+      "target": "function:src/app/sections/gallery.rs:Gallery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sections/hero.rs",
+      "target": "function:src/app/sections/hero.rs:Hero",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sections/testimonial.rs",
+      "target": "function:src/app/sections/testimonial.rs:Testimonial",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconGraduationCap",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconAward",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconBriefcase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconAmbulance",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconWind",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconInfinity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconInstagram",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconLinkedIn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconMenu",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/icons.rs",
+      "target": "function:src/app/icons.rs:IconX",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/mod.rs",
+      "target": "function:src/app/mod.rs:shell",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/mod.rs",
+      "target": "function:src/app/mod.rs:App",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/nav.rs",
+      "target": "function:src/app/nav.rs:Nav",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sections/about.rs",
+      "target": "function:src/app/sections/about.rs:About",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sections/approach.rs",
+      "target": "function:src/app/sections/approach.rs:Approach",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sections/credentials.rs",
+      "target": "function:src/app/sections/credentials.rs:Credentials",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sections/footer.rs",
+      "target": "function:src/app/sections/footer.rs:Footer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sections/gallery.rs",
+      "target": "function:src/app/sections/gallery.rs:Gallery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sections/hero.rs",
+      "target": "function:src/app/sections/hero.rs:Hero",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sections/testimonial.rs",
+      "target": "function:src/app/sections/testimonial.rs:Testimonial",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/mod.rs",
+      "target": "file:src/app/components/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/mod.rs",
+      "target": "file:src/app/icons.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/mod.rs",
+      "target": "file:src/app/nav.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/mod.rs",
+      "target": "file:src/app/sections/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/nav.rs",
+      "target": "file:src/app/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/about.rs",
+      "target": "file:src/app/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/approach.rs",
+      "target": "file:src/app/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/credentials.rs",
+      "target": "file:src/app/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/footer.rs",
+      "target": "file:src/app/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/gallery.rs",
+      "target": "file:src/app/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/mod.rs",
+      "target": "file:src/app/sections/about.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/mod.rs",
+      "target": "file:src/app/sections/approach.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/mod.rs",
+      "target": "file:src/app/sections/credentials.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/mod.rs",
+      "target": "file:src/app/sections/footer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/mod.rs",
+      "target": "file:src/app/sections/gallery.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/mod.rs",
+      "target": "file:src/app/sections/hero.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/mod.rs",
+      "target": "file:src/app/sections/instagram.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/mod.rs",
+      "target": "file:src/app/sections/testimonial.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/app/mod.rs:HomePage",
+      "target": "function:src/app/nav.rs:Nav",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/mod.rs:HomePage",
+      "target": "function:src/app/sections/hero.rs:Hero",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/mod.rs:HomePage",
+      "target": "function:src/app/sections/about.rs:About",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/mod.rs:HomePage",
+      "target": "function:src/app/sections/credentials.rs:Credentials",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/mod.rs:HomePage",
+      "target": "function:src/app/sections/approach.rs:Approach",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/mod.rs:HomePage",
+      "target": "function:src/app/sections/gallery.rs:Gallery",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/mod.rs:HomePage",
+      "target": "function:src/app/sections/testimonial.rs:Testimonial",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/mod.rs:HomePage",
+      "target": "function:src/app/sections/instagram.rs:InstagramSection",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/mod.rs:HomePage",
+      "target": "function:src/app/sections/footer.rs:Footer",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/sections/footer.rs:Footer",
+      "target": "function:src/app/icons.rs:IconInstagram",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/sections/footer.rs:Footer",
+      "target": "function:src/app/icons.rs:IconLinkedIn",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/sections/approach.rs:Approach",
+      "target": "function:src/app/icons.rs:IconAmbulance",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/sections/approach.rs:Approach",
+      "target": "function:src/app/icons.rs:IconInfinity",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/sections/approach.rs:Approach",
+      "target": "function:src/app/icons.rs:IconWind",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/sections/credentials.rs:Credentials",
+      "target": "function:src/app/icons.rs:IconAward",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/sections/credentials.rs:Credentials",
+      "target": "function:src/app/icons.rs:IconBriefcase",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/sections/credentials.rs:Credentials",
+      "target": "function:src/app/icons.rs:IconGraduationCap",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/nav.rs:Nav",
+      "target": "function:src/app/icons.rs:IconInstagram",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/nav.rs:Nav",
+      "target": "function:src/app/icons.rs:IconMenu",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/app/nav.rs:Nav",
+      "target": "function:src/app/icons.rs:IconX",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sections/instagram.rs",
+      "target": "function:src/app/sections/instagram.rs:get_feed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sections/instagram.rs",
+      "target": "function:src/app/sections/instagram.rs:InstagramSection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sections/instagram.rs",
+      "target": "function:src/app/sections/instagram.rs:ig_tile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sections/instagram.rs",
+      "target": "function:src/app/sections/instagram.rs:IgFallbackGrid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib.rs",
+      "target": "function:src/lib.rs:hydrate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/models.rs",
+      "target": "class:src/models.rs:FeedItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/models.rs",
+      "target": "class:src/models.rs:FeedKind",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/server/http.rs",
+      "target": "function:src/server/http.rs:status_routes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/server/http.rs",
+      "target": "function:src/server/http.rs:version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/server/http.rs",
+      "target": "function:src/server/http.rs:apply_middleware",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/server/http.rs",
+      "target": "function:src/server/http.rs:cache_control",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/server/http.rs",
+      "target": "function:src/server/http.rs:cache_value_for",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/server/http.rs",
+      "target": "function:src/server/http.rs:is_dotfile_blocked",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sections/instagram.rs",
+      "target": "function:src/app/sections/instagram.rs:get_feed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sections/instagram.rs",
+      "target": "function:src/app/sections/instagram.rs:InstagramSection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib.rs",
+      "target": "function:src/lib.rs:hydrate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/models.rs",
+      "target": "class:src/models.rs:FeedItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/models.rs",
+      "target": "class:src/models.rs:FeedKind",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/server/http.rs",
+      "target": "function:src/server/http.rs:status_routes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/server/http.rs",
+      "target": "function:src/server/http.rs:apply_middleware",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sections/instagram.rs",
+      "target": "file:src/app/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sections/instagram.rs",
+      "target": "file:src/models.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib.rs",
+      "target": "file:src/app/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib.rs",
+      "target": "file:src/models.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib.rs",
+      "target": "file:src/server/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/server/mod.rs",
+      "target": "file:src/server/http.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/components/eyebrow.rs",
+      "target": "function:src/app/components/eyebrow.rs:Eyebrow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/components/eyebrow.rs",
+      "target": "function:src/app/components/eyebrow.rs:Eyebrow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/components/info_card.rs",
+      "target": "class:src/app/components/info_card.rs:CardFill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/components/info_card.rs",
+      "target": "class:src/app/components/info_card.rs:CardFill",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/components/info_card.rs",
+      "target": "function:src/app/components/info_card.rs:InfoCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/components/info_card.rs",
+      "target": "function:src/app/components/info_card.rs:InfoCard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/components/mod.rs",
+      "target": "file:src/app/components/eyebrow.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/components/mod.rs",
+      "target": "file:src/app/components/info_card.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:Dockerfile",
+      "target": "service:Dockerfile:builder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "service:Dockerfile",
+      "target": "service:Dockerfile:runtime",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "service:Dockerfile",
+      "target": "file:src/main.rs",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "config:.dockerignore",
+      "target": "service:Dockerfile",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "pipeline:.github/workflows/build-and-deploy.yml",
+      "target": "file:src/main.rs",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "pipeline:.github/workflows/build-and-deploy.yml",
+      "target": "service:Dockerfile",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "pipeline:.github/workflows/pr_open.yml",
+      "target": "service:Dockerfile",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "pipeline:.github/workflows/pr_open.yml",
+      "target": "file:src/main.rs",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:Cargo.toml",
+      "target": "file:src/main.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:Cargo.toml",
+      "target": "file:src/lib.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:README.md",
+      "target": "file:src/main.rs",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:scripts/smoke-test.sh",
+      "target": "function:scripts/smoke-test.sh:cleanup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/smoke-test.sh",
+      "target": "function:scripts/smoke-test.sh:assert_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/smoke-test.sh",
+      "target": "function:scripts/smoke-test.sh:assert_body_contains",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/smoke-test.sh",
+      "target": "function:scripts/smoke-test.sh:assert_body_equals",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/main.rs",
+      "target": "function:src/main.rs:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:style/tailwind.css",
+      "target": "file:src/app/mod.rs",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "function:src/main.rs:main",
+      "target": "function:src/app/mod.rs:shell",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/main.rs:main",
+      "target": "function:src/app/mod.rs:App",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/main.rs:main",
+      "target": "function:src/server/http.rs:status_routes",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/main.rs:main",
+      "target": "function:src/server/http.rs:apply_middleware",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:ui",
+      "name": "Presentation & UI",
+      "description": "The Leptos component tree for chpilates.fun: the App/HomePage composition root and router, the responsive nav bar, the inline SVG icon set, shared Eyebrow/InfoCard primitives, every home-page section, and the Tailwind v4 design tokens and fonts.",
+      "nodeIds": [
+        "file:src/app/mod.rs",
+        "file:src/app/nav.rs",
+        "file:src/app/icons.rs",
+        "file:src/app/components/mod.rs",
+        "file:src/app/components/eyebrow.rs",
+        "file:src/app/components/info_card.rs",
+        "file:src/app/sections/mod.rs",
+        "file:src/app/sections/hero.rs",
+        "file:src/app/sections/about.rs",
+        "file:src/app/sections/credentials.rs",
+        "file:src/app/sections/approach.rs",
+        "file:src/app/sections/gallery.rs",
+        "file:src/app/sections/testimonial.rs",
+        "file:src/app/sections/instagram.rs",
+        "file:src/app/sections/footer.rs",
+        "file:style/tailwind.css"
+      ]
+    },
+    {
+      "id": "layer:runtime",
+      "name": "Server Runtime & Hydration",
+      "description": "Axum SSR bootstrap (main.rs), the wasm-bindgen browser hydration entry (lib.rs), and the tower-http/axum middleware layer providing security headers, gzip, two-tier cache-control, a dotfile guard, and the /healthz and /version status routes.",
+      "nodeIds": [
+        "file:src/main.rs",
+        "file:src/lib.rs",
+        "file:src/server/mod.rs",
+        "file:src/server/http.rs"
+      ]
+    },
+    {
+      "id": "layer:domain",
+      "name": "Shared Domain Model",
+      "description": "The shared serde data models (FeedItem, FeedKind) for the Instagram feed, compiled into both the ssr and hydrate builds so the server function's types resolve identically on client and server.",
+      "nodeIds": [
+        "file:src/models.rs"
+      ]
+    },
+    {
+      "id": "layer:infrastructure",
+      "name": "Infrastructure & Deployment",
+      "description": "Container build and CI/CD assets: the two-stage cargo-leptos Dockerfile and its builder/runtime stages, the .dockerignore context filter, the GitHub Actions release and PR pipelines, the container smoke test, and the retired nginx reference config.",
+      "nodeIds": [
+        "service:Dockerfile",
+        "service:Dockerfile:builder",
+        "service:Dockerfile:runtime",
+        "config:.dockerignore",
+        "pipeline:.github/workflows/build-and-deploy.yml",
+        "pipeline:.github/workflows/pr_open.yml",
+        "file:scripts/smoke-test.sh",
+        "file:nginx.conf"
+      ]
+    },
+    {
+      "id": "layer:config",
+      "name": "Project Configuration & Docs",
+      "description": "Project-level manifests and human-facing documentation: the Cargo.toml crate/leptos manifest, pinned rust-toolchain.toml, CodeRabbit review config, the main README knowledge base, and the public/img image drop-in guide.",
+      "nodeIds": [
+        "config:Cargo.toml",
+        "config:rust-toolchain.toml",
+        "config:.coderabbit.yaml",
+        "document:README.md",
+        "document:public/img/README.md"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "Application Entry Point",
+      "description": "Start here: src/main.rs is the SSR server bootstrap. It loads the Leptos configuration, wires axum and leptos_axum together, mounts the /healthz and /version status routes alongside the Leptos server-side-rendering routes, applies the middleware stack, and serves over TCP. The same file also declares a no-op main so the crate still compiles when built for the WASM hydration target instead of the server.",
+      "nodeIds": [
+        "file:src/main.rs"
+      ],
+      "languageLesson": "Rust cfg feature gates (#[cfg(feature = \"ssr\")]) let one crate compile two ways: the real axum server for the ssr build, and an empty main for the hydrate build that ships to the browser. This split-build pattern is the backbone of every Leptos full-stack app."
+    },
+    {
+      "order": 2,
+      "title": "App Composition Root",
+      "description": "src/app/mod.rs is the hub of the whole UI \u2014 the file everything else points back to (the highest fan-in in the project). It declares the child modules, re-exports the public component and icon surface, holds the shared site-metadata constants (SITE_TITLE, INSTAGRAM_HANDLE, INSTAGRAM_URL), and defines three key pieces: the SSR `shell`, the top-level `App` router, and the `HomePage` that lays out every page section in order. The server from Step 1 renders `App` through `shell`, so this is where server and UI meet.",
+      "nodeIds": [
+        "file:src/app/mod.rs"
+      ],
+      "languageLesson": "A Leptos #[component] is just a function that returns a view built with the view! macro. The barrel module pattern (mod + pub use) re-exports those components so the rest of the crate imports from one place instead of reaching into deep paths."
+    },
+    {
+      "order": 3,
+      "title": "Design System: Tokens & Primitives",
+      "description": "Before the sections, meet the design system they all share. style/tailwind.css defines the palette and font families as Tailwind v4 @theme tokens and self-hosts the Fraunces and Geist variable fonts. The components barrel then exposes two reusable primitives built on those tokens: Eyebrow (the dash-plus-uppercase label above section titles) and InfoCard with its CardFill tint enum (the icon-chip card used by Credentials and Approach). Learning these first means the section steps become mostly composition.",
+      "nodeIds": [
+        "file:style/tailwind.css",
+        "file:src/app/components/mod.rs",
+        "file:src/app/components/eyebrow.rs",
+        "file:src/app/components/info_card.rs"
+      ],
+      "languageLesson": "Tailwind v4 declares design tokens in CSS with @theme, which generates matching utility classes at build time. Self-hosting fonts via @font-face (rather than a Google Fonts CDN) keeps the site dependency-free and avoids a third-party network request on every page load."
+    },
+    {
+      "order": 4,
+      "title": "Inline Icon Library",
+      "description": "src/app/icons.rs is a small library of ten inline SVG icon components (graduation cap, award, briefcase, ambulance, wind, infinity, Instagram, LinkedIn, menu, close), each taking a `class` prop. It has the widest fan-out in the codebase because the nav, several sections, and the footer all pull from it. Keeping icons as Rust components rather than external files means they render straight into the SSR HTML with no extra asset requests.",
+      "nodeIds": [
+        "file:src/app/icons.rs"
+      ]
+    },
+    {
+      "order": 5,
+      "title": "Navigation & First Sections",
+      "description": "Now the page starts taking shape. src/app/nav.rs is the responsive navigation bar, using the menu, close, and Instagram icons from Step 4. The sections barrel (sections/mod.rs) declares and re-exports every home-page section, which is exactly the list HomePage lays out in Step 2. Hero renders the landing headline and primary call-to-action, and About carries the practitioner's introductory bio.",
+      "nodeIds": [
+        "file:src/app/nav.rs",
+        "file:src/app/sections/mod.rs",
+        "file:src/app/sections/hero.rs",
+        "file:src/app/sections/about.rs"
+      ],
+      "languageLesson": "The mobile menu is driven by a Leptos reactive signal: reading it in the view subscribes that markup, and updating it on a click re-renders just the affected nodes. This fine-grained reactivity \u2014 no virtual DOM diff \u2014 is Leptos's defining trait versus React-style frameworks."
+    },
+    {
+      "order": 6,
+      "title": "Content Sections",
+      "description": "These five sections fill out the body of the page and show the primitives from Step 3 in real use. Credentials (graduation-cap, award, briefcase icons) and Approach (ambulance, wind, infinity icons) both compose Eyebrow and InfoCard, so they read as configuration more than new code. Gallery lays out session photography in a responsive grid, Testimonial shows a client quote, and Footer closes with the Instagram and LinkedIn social links.",
+      "nodeIds": [
+        "file:src/app/sections/credentials.rs",
+        "file:src/app/sections/approach.rs",
+        "file:src/app/sections/gallery.rs",
+        "file:src/app/sections/testimonial.rs",
+        "file:src/app/sections/footer.rs"
+      ]
+    },
+    {
+      "order": 7,
+      "title": "Shared Model & Instagram Feed Contract",
+      "description": "The Instagram section is the one piece of the site with real client-server data flow, so it gets its own stop. src/models.rs defines the shared FeedItem and FeedKind types, compiled into BOTH the ssr and hydrate builds so the types line up on each side of the wire. instagram.rs then exposes a get_feed #[server] function (a Phase-4 stub returning an empty vec) whose result drives a Resource/Suspense tile grid, falling back to a static six-tile placeholder while data loads or when the feed is empty.",
+      "nodeIds": [
+        "file:src/models.rs",
+        "file:src/app/sections/instagram.rs"
+      ],
+      "languageLesson": "A Leptos #[server] function is callable from the browser but its body only ever runs on the server; the framework generates the fetch and (de)serialization around it. That is exactly why the FeedItem/FeedKind types must live in a shared module compiled into both builds \u2014 the serialized contract has to match on client and server."
+    },
+    {
+      "order": 8,
+      "title": "Browser Hydration Entry",
+      "description": "src/lib.rs is the crate root for the WASM half of the app and the counterpart to the server entry in Step 1. It exposes a wasm-bindgen `hydrate` function that installs a panic hook and hydrates the same `App` from Step 2 in the browser. Hydration attaches interactivity (like the nav signal from Step 5) to the server-rendered HTML instead of throwing it away and re-rendering.",
+      "nodeIds": [
+        "file:src/lib.rs"
+      ],
+      "languageLesson": "wasm-bindgen exposes a Rust function to JavaScript so the browser can call `hydrate()` on page load. Hydration reuses the SSR HTML and only wires up event handlers and reactive state \u2014 this is what makes SSR + hydration feel instant yet interactive."
+    },
+    {
+      "order": 9,
+      "title": "Ops Middleware & Status Routes",
+      "description": "Back on the server side, src/server/http.rs is the tower/axum HTTP layer that Step 1's main.rs mounts and wraps around every response. Its status_routes serve /healthz and /version, and apply_middleware layers on nginx-parity behavior: security headers, gzip compression, a two-tier cache-control policy, and a percent-decoding dotfile guard. The server/mod.rs barrel simply exposes this http submodule to the rest of the crate.",
+      "nodeIds": [
+        "file:src/server/mod.rs",
+        "file:src/server/http.rs"
+      ],
+      "languageLesson": "tower middleware are composable Layers wrapped around a service, and order matters \u2014 each layer sees the request on the way in and the response on the way out. This is how a Leptos/axum app replaces a separate nginx front end with in-process Rust middleware."
+    },
+    {
+      "order": 10,
+      "title": "Containerization & CI/CD",
+      "description": "This is how the code from every previous step actually ships. The Dockerfile is a two-stage cargo-leptos build: a rust:slim builder compiles the axum server, the hydration WASM, and the site assets, then a minimal debian:bookworm-slim runtime runs them as non-root uid 10001 on port 80. .dockerignore keeps build outputs and secrets out of the context, pr_open.yml gates every PR with fmt, two-sided clippy, and the smoke-test.sh container probe, and build-and-deploy.yml turns a release tag into a GHCR image, a Dokploy rollout, and a Cloudflare cache purge.",
+      "nodeIds": [
+        "service:Dockerfile",
+        "config:.dockerignore",
+        "pipeline:.github/workflows/pr_open.yml",
+        "pipeline:.github/workflows/build-and-deploy.yml",
+        "file:scripts/smoke-test.sh"
+      ],
+      "languageLesson": "Multi-stage Docker builds separate the heavy build toolchain from the runtime image: the builder stage carries the Rust compiler and cargo-leptos, while the final stage copies only the compiled binary and assets. Binding port 80 as a non-root user is granted narrowly via setcap cap_net_bind_service instead of running the whole process as root."
+    },
+    {
+      "order": 11,
+      "title": "Configuration & Docs",
+      "description": "Finish with the files that define and document the project. Cargo.toml declares the split cdylib+rlib crate, the ssr/hydrate feature sets that power Step 1 and Step 8, and the [package.metadata.leptos] config with hash-files cache-busting; rust-toolchain.toml pins the toolchain for reproducible builds. The top-level README.md is the project knowledge base covering features, decisions, and local workflows, while public/img/README.md documents the image drop-in system used by the Gallery from Step 6.",
+      "nodeIds": [
+        "config:Cargo.toml",
+        "config:rust-toolchain.toml",
+        "document:README.md",
+        "document:public/img/README.md"
+      ],
+      "languageLesson": "Cargo features let one manifest describe two build shapes: enabling `ssr` produces the server rlib+binary, enabling `hydrate` produces the browser cdylib (WASM). The [package.metadata.leptos] table is where cargo-leptos reads its build settings, including hash-files=true for content-hashed, immutably-cacheable assets."
+    }
+  ]
+}
