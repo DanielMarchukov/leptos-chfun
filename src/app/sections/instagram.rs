@@ -1,3 +1,6 @@
+// #[server] expands to a trait impl the item-level allow can't reach.
+#![allow(clippy::unused_async_trait_impl)]
+
 use leptos::prelude::*;
 
 use crate::app::{IconInstagram, INSTAGRAM_HANDLE, INSTAGRAM_URL};

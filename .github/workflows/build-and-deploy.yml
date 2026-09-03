@@ -32,7 +32,7 @@ env:
 jobs:
   build-and-push:
     name: Build image and push to GHCR
-    runs-on: ubuntu-latest
+    runs-on: namespace-profile-dev
     timeout-minutes: 30
     permissions:
       contents: read
@@ -49,8 +49,8 @@ jobs:
           # the token into .git/config.
           persist-credentials: false
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Point buildx at Namespace Remote Builders
+        uses: namespacelabs/nscloud-setup-buildx-action@v0.0.23
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -80,16 +80,14 @@ jobs:
           # smoke test asserts it; here it just stamps the image with its commit.
           build-args: |
             GIT_SHA=${{ github.sha }}
-          # GHA cache is per-repo, persists between runs and is free.
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # No cache-from/to: Remote Builders keep layer cache on the builder.
           # amd64-only; if the VPS is arm64, add platforms: linux/arm64 + a
           # native arm runner (QEMU cross-compile is slow for a full Leptos build).
 
   deploy:
     name: Trigger Dokploy deploy, verify, purge cache
     needs: build-and-push
-    runs-on: ubuntu-latest
+    runs-on: namespace-profile-dev
     timeout-minutes: 20
     environment: production
     if: ${{ vars.DEPLOY_ENABLED == 'true' }}
