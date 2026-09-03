@@ -68,8 +68,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Point buildx at Namespace Remote Builders
+        uses: namespacelabs/nscloud-setup-buildx-action@v0.0.23
 
       - name: Build the deploy image (load locally)
         uses: docker/build-push-action@v6
@@ -79,8 +79,7 @@ jobs:
           tags: leptos-chfun:ci
           build-args: |
             GIT_SHA=${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # No cache-from/to: Remote Builders keep layer cache on the builder.
 
       - name: Run the image and smoke-check (:80, non-root)
         env:
