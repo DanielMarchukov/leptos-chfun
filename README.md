@@ -80,9 +80,16 @@ here.
   passes already compile both the `ssr` (native) and `hydrate` (wasm32) targets.
   The `cargo leptos build --release` + site assembly + a running-container smoke
   test live in the **Docker job**. `cargo leptos build` (release *and* debug)
-  can't spawn its downloaded helper tools on the bare `ubuntu-latest` runner
-  (ENOENT at cargo-leptos `src/ext/sync.rs:83`); it works only in the
-  debian-bookworm build container.
+  can't spawn its downloaded helper tools directly on a bare CI runner (ENOENT
+  at cargo-leptos `src/ext/sync.rs:83`); it works only in the debian-bookworm
+  build container.
+- **CI runners:** every job runs on Namespace
+  (`runs-on: namespace-profile-dev`) instead of `ubuntu-latest`. Drop-in swap —
+  the profile is configured in the Namespace dashboard, so shape/OS changes
+  need no workflow edit. The Docker jobs still use `docker/setup-buildx-action`
+  + `cache-from: type=gha`; switching them to Namespace Remote Builders
+  (`namespacelabs/nscloud-setup-buildx-action`, no `cache-*`) requires builders
+  enabled on the profile.
 - **Platform constraints:** the container binds **port 80** (Traefik routes to
   `:80`) as a **non-root** user; **latest-stable Rust** (not pinned);
   `cargo-leptos` pinned to `0.3.7`; Cloudflare Bot Fight Mode stays on; the

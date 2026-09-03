@@ -23,7 +23,7 @@ env:
 jobs:
   verify:
     name: Format, lint, build
-    runs-on: ubuntu-latest
+    runs-on: namespace-profile-dev
     timeout-minutes: 30
     # Draft PRs get skipped, but push events have no draft field so they always run.
     if: github.event_name == 'push' || github.event.pull_request.draft == false
@@ -60,7 +60,7 @@ jobs:
 
   docker:
     name: Docker image build + run
-    runs-on: ubuntu-latest
+    runs-on: namespace-profile-dev
     timeout-minutes: 30
     if: github.event_name == 'push' || github.event.pull_request.draft == false
 
